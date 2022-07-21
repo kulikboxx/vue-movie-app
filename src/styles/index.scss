@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+
+  a {
+    text-decoration: none;
+  }
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  @include base-scrollbar-styles(1rem, $primary);
+  color: $white;
+  font-size: $fsize-rg;
+  font-family: 'Poppins', sans-serif;
+  font-weight: $fweight-md;
+  line-height: 150%;
+  background-color: $main;
+  overflow-x: hidden;
+
+  ::selection {
+    color: $white;
+    background-color: $primary;
+  }
+}

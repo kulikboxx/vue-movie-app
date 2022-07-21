@@ -1,0 +1,22 @@
+@use '_variables'as *;
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: $fweight-lt;
+  src: local('Poppins'), url('../assets/fonts/Poppins-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: $fweight-md;
+  src: local('Poppins'), url('../assets/fonts/Poppins-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: $fweight-bd;
+  src: local('Poppins'), url('../assets/fonts/Poppins-ExtraBold.ttf');
+}

@@ -1,0 +1,138 @@
+@use '_variables'as *;
+
+@mixin base-scrollbar-styles($width: 1rem, $color: $primary) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: 1rem;
+
+    &-track {
+      background-color: $white;
+    }
+
+    &-thumb {
+      background-image: $gradient;
+    }
+  }
+}
+
+@mixin base-element-styles($justify-content: center, $gap: 0.8rem) {
+  display: inline-flex;
+  justify-content: $justify-content;
+  align-items: center;
+  gap: $gap;
+  padding: 0.625em 1.25em;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-family: inherit;
+  border: 0.1rem solid transparent;
+  border-radius: 0.4rem;;
+
+  &:focus {
+    outline: none;
+
+    &-visible {
+      outline: 0.4rem solid rgba($gray, 0.5);
+    }
+  }
+
+  &[disabled],
+  &--disabled {
+    background-color: $gray;
+    border-color: transparent;
+    outline: none;
+    pointer-events: none;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+@mixin placeholder-style {
+  &::placeholder {
+    color: rgba($gray, 0.65);
+  }
+}
+
+@mixin primary-element-palette {
+  background-color: $primary;
+
+  &:focus-visible {
+    outline-color: rgba($primary, 0.3);
+  }
+
+  &[disabled],
+  &--disabled {
+    background-color: darken($primary, 10%);
+  }
+}
+
+@mixin secondary-element-palette {
+  background-color: $secondary;
+
+  &:focus-visible {
+    outline-color: rgba($secondary, 0.6);
+  }
+
+  &[disabled],
+  &--disabled {
+    background-color: darken($secondary, 4%);
+  }
+}
+
+@mixin invalid-element-styles {
+  border-color: $pink;
+  outline: 0.4rem solid transparent;
+
+  &:focus-visible {
+    outline-color: rgba($pink, 0.2);
+  }
+}
+
+@mixin danger-element-palette {
+  background-color: $pink;
+
+  &[disabled],
+  &--disabled {
+    background-color: darken($pink, 10%);
+  }
+}
+
+@mixin success-element-palette {
+  background-color: $green;
+}
+
+@mixin warning-element-palette {
+  background-color: $gold;
+}
+
+@mixin link-element-focus {
+  &:focus {
+    border-radius: 0.4rem;;
+    outline: 0.4rem solid transparent;
+
+    &-visible {
+      outline-color: rgba($primary, 0.2);
+    }
+  }
+}
+
+@mixin gradient-text {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// @mixin responsive-font($mobSize, $pcSize, $maxWidth: 1200) {
+//   $addSize: $pcSize - $mobSize;
+//   $addMobSize: $addSize + $addSize * 0.7;
+
+//   @media (max-width: 767px) {
+//     font-size: clamp(#{$mobSize + px}, #{$mobSize + px} + #{$addMobSize} * ((100vw - 320px) / #{$maxWidth}), #{$pcSize + px});
+//   }
+
+//   @media (min-width: 767px) {
+//     font-size: clamp(#{$mobSize + px}, #{$mobSize + px} + #{$addSize} * (100vw / #{$maxWidth}), #{$pcSize + px});
+//   }
+// }

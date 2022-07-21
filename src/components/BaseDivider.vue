@@ -1,0 +1,24 @@
+<template>
+  <div :class="['base-divider', { 'base-divider--centered': centered }]"></div>
+</template>
+
+<script lang="ts" setup>
+interface Props {
+  centered?: boolean;
+}
+
+defineProps<Props>();
+</script>
+
+<style lang="scss" scoped>
+.base-divider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  background-color: $gray;
+
+  &--centered {
+    margin-inline: auto;
+  }
+}
+</style>
