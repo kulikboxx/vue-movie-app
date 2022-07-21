@@ -9,6 +9,5 @@ export const getters: GetterTree<State, State> = {
   [Getter.GET_ERROR]: (state) => state.error,
   [Getter.GET_FETCHING]: (state) => state.fetching,
   [Getter.GET_MOVIES_LIST]: (state) => state.moviesList,
-  [Getter.GET_PAGINATED_LIST]: (state) => state.paginatedList,
   [Getter.GET_TV_SHOWS_LIST]: (state) => state.tvShowsList,
 };

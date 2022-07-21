@@ -4,6 +4,7 @@ export interface TVShowItem {
   overview: string;
   vote_average: number;
   original_language: string;
+  popularity: string;
   first_air_date: string;
   backdrop_path: string;
   backdrop_md: string;

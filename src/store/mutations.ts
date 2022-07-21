@@ -12,9 +12,6 @@ export const mutations: MutationTree<State> = {
   [Mutation.SHOW_ALERT](state, payload) {
     state.alerts.push({ ...payload, id: Date.now() });
   },
-  [Mutation.ON_PAGINATION](state, payload) {
-    state.paginatedList = payload;
-  },
   [Mutation.UPDATE_ERROR](state, payload) {
     state.error = payload;
   },

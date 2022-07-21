@@ -2,9 +2,9 @@
   <base-section class="tv-shows-page__section">
     <base-wrapper>
       <base-caption class="tv-shows-page__caption">
-        <base-heading type="h1">
+        <template #baseCaptionHeadingH1>
           {{ dictionary.popularTvShows }} ({{ tvShowsList.length }})
-        </base-heading>
+        </template>
       </base-caption>
 
       <div class="tv-shows-page__container">
@@ -25,7 +25,7 @@
             </template>
 
             <base-heading type="h3">
-              {{ sliceText(item.name, 22, false) }}
+              {{ sliceText(item.name, 20, false) }}
             </base-heading>
 
             <base-badge color="secondary">
@@ -51,8 +51,9 @@
         </layout-grid-cards>
 
         <base-pagination
-          v-bind="{ items: tvShowsList, limit: 20 }"
+          v-bind="{ items: tvShowsList, limit: 8 }"
           class="tv-shows-page__pagination"
+          @change="(list: Array<TVShowItem>) => (paginatedList = list)"
         />
       </div>
     </base-wrapper>
@@ -60,8 +61,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useStore, Getter } from '../store';
+import { computed, ref } from 'vue';
+import { useStore, Getter, TVShowItem } from '../store';
 import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
 
@@ -69,8 +70,11 @@ import LayoutGridCards from '../layout/LayoutGridCards.vue';
 
 const store = useStore();
 
-const tvShowsList = computed(() => store.getters[Getter.GET_TV_SHOWS_LIST]);
-const paginatedList = computed(() => store.getters[Getter.GET_PAGINATED_LIST]);
+const tvShowsList = computed<Array<TVShowItem>>(
+  () => store.getters[Getter.GET_TV_SHOWS_LIST]
+);
+
+const paginatedList = ref<Array<TVShowItem>>();
 </script>
 
 <style lang="scss">

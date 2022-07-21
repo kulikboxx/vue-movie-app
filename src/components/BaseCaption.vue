@@ -1,6 +1,10 @@
 <template>
   <div class="base-caption">
-    <base-heading type="h2">
+    <base-heading v-if="$slots.baseCaptionHeadingH1" type="h1">
+      <slot name="baseCaptionHeadingH1" />
+    </base-heading>
+
+    <base-heading v-if="$slots.default" type="h2">
       <slot />
     </base-heading>
 

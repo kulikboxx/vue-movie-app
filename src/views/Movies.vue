@@ -2,9 +2,9 @@
   <base-section class="movies-page__section">
     <base-wrapper>
       <base-caption class="movies-page__caption">
-        <base-heading type="h1">
+        <template #baseCaptionHeadingH1>
           {{ dictionary.popularMovies }} ({{ movieList.length }})
-        </base-heading>
+        </template>
       </base-caption>
 
       <div class="movies-page__container">
@@ -25,7 +25,7 @@
             </template>
 
             <base-heading type="h3">
-              {{ sliceText(item.title, 22, false) }}
+              {{ sliceText(item.title, 20, false) }}
             </base-heading>
 
             <base-badge color="secondary">
@@ -43,7 +43,7 @@
                 @click="
                   $router.push({
                     name: 'movie',
-                    params: { id: item.id, item },
+                    params: { id: item.id },
                   })
                 "
               >
@@ -54,8 +54,9 @@
         </layout-grid-cards>
 
         <base-pagination
-          v-bind="{ items: movieList, limit: 10 }"
+          v-bind="{ items: movieList, limit: 8 }"
           class="movies-page__pagination"
+          @change="(list: Array<MovieItem>) => (paginatedList = list)"
         />
       </div>
     </base-wrapper>
@@ -63,8 +64,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useStore, Getter } from '../store';
+import { computed, ref } from 'vue';
+import { useStore, Getter, MovieItem } from '../store';
 import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
 
@@ -72,8 +73,11 @@ import LayoutGridCards from '../layout/LayoutGridCards.vue';
 
 const store = useStore();
 
-const movieList = computed(() => store.getters[Getter.GET_MOVIES_LIST]);
-const paginatedList = computed(() => store.getters[Getter.GET_PAGINATED_LIST]);
+const movieList = computed<Array<MovieItem>>(
+  () => store.getters[Getter.GET_MOVIES_LIST]
+);
+
+const paginatedList = ref<Array<MovieItem>>();
 </script>
 
 <style lang="scss">
