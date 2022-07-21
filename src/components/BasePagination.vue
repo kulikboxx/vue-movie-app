@@ -7,7 +7,7 @@
       square
       @click="setPage(currentPage - 1)"
     >
-      <base-icon name="chevron-up" degrees="-90deg" rotation size="24px" />
+      <base-icon name="chevron-up" degrees="-90deg" rotation size="21px" />
     </base-button>
 
     <base-button
@@ -31,26 +31,29 @@
       square
       @click="setPage(currentPage + 1)"
     >
-      <base-icon name="chevron-up" degrees="90deg" rotation size="24px" />
+      <base-icon name="chevron-up" degrees="90deg" rotation size="21px" />
     </base-button>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
-import { useStore, Action, Getter, MovieItem, TVShowItem } from '../store';
+import { useStore, Action, Getter } from '../store';
 
 const store = useStore();
 
+type ItemType = Record<PropertyKey, unknown>;
+
 interface Props {
-  items: Array<MovieItem | TVShowItem>;
+  items: Array<ItemType>;
   limit: number;
 }
 
-const props = withDefaults(defineProps<Props>(), { items: () => [] });
+const props = defineProps<Props>();
+const emit = defineEmits(['change']);
 
 const totalPages = computed(() => Math.ceil(props.items.length / props.limit));
-const currentPage = computed(() => store.getters[Getter.GET_CURRENT_PAGE]);
+const currentPage = computed(() => +store.getters[Getter.GET_CURRENT_PAGE]);
 const pagesArray = computed(() => Array.from(Array(totalPages.value).keys()));
 
 const transformedPages = computed(() => {
@@ -79,12 +82,17 @@ function typeofValue(value: string | number) {
   return typeof value === 'string';
 }
 
+function paginatePages(page: number) {
+  const limit = props.limit;
+
+  return props.items.filter(
+    (el: ItemType, i: number) => i >= page * limit && i < page * limit + limit
+  );
+}
+
 function setPage(page: number) {
-  store.dispatch(Action.ON_PAGINATION, {
-    items: props.items,
-    limit: props.limit,
-    page,
-  });
+  store.dispatch(Action.SET_CURRENT_PAGE, page);
+  emit('change', paginatePages(page));
 }
 
 onMounted(() => setPage(0));
@@ -98,8 +106,6 @@ onMounted(() => setPage(0));
   align-items: center;
 
   &__button {
-    font-size: $fsize-rg;
-
     &:focus {
       z-index: 5;
     }

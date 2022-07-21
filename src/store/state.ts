@@ -6,7 +6,6 @@ export interface State {
   error: boolean;
   fetching: boolean;
   moviesList: Array<MovieItem>;
-  paginatedList: Array<MovieItem | TVShowItem>;
   tvShowsList: Array<TVShowItem>;
 }
 
@@ -16,6 +15,5 @@ export const state: State = {
   error: false,
   fetching: false,
   moviesList: [],
-  paginatedList: [],
   tvShowsList: [],
 };

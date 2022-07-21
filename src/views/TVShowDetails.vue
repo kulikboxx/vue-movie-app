@@ -3,33 +3,34 @@
     <base-wrapper>
       <layout-grid-details>
         <template #layoutGridDetailsImage>
-          <base-image v-bind="{ alt: tvShow.name, src: tvShow.poster_lg }" />
+          <base-image v-bind="{ alt: tvShow?.name, src: tvShow?.poster_lg }" />
         </template>
 
         <base-heading type="h1" color="danger">
-          {{ pageNumber + 1 }}. {{ tvShow.name }}
+          {{ pageNumber + 1 }}. {{ tvShow?.name }}
         </base-heading>
 
         <base-badge color="danger">
           {{ dictionary.language }}:
-          {{ tvShow.original_language.toUpperCase() }}
+          {{ tvShow?.original_language.toUpperCase() }}
         </base-badge>
 
         <base-paragraph>
-          {{ dictionary.overview }}: {{ tvShow.overview }}
+          {{ dictionary.overview }}: {{ tvShow?.overview }}
         </base-paragraph>
 
         <div>
           <base-badge color="success">
-            {{ dictionary.rating }}: {{ tvShow.vote_average }}
+            {{ dictionary.rating }}: {{ tvShow?.vote_average }}
           </base-badge>
 
           <base-badge color="secondary">
-            {{ dictionary.views }}: {{ parseInt(tvShow.popularity) }}
+            {{ dictionary.views }}:
+            {{ tvShow?.popularity && parseInt(tvShow?.popularity) }}
           </base-badge>
 
           <base-badge color="warning">
-            {{ dictionary.release }}: {{ tvShow.first_air_date }}
+            {{ dictionary.release }}: {{ tvShow?.first_air_date }}
           </base-badge>
         </div>
 
@@ -107,7 +108,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore, Action, Getter, TVShowItem } from '../store';
 import { dictionary } from '../config/dictionary.config';
@@ -117,13 +118,23 @@ import LayoutGridDetails from '../layout/LayoutGridDetails.vue';
 const route = useRoute();
 const store = useStore();
 
-const tvShowsList = computed(() => store.getters[Getter.GET_TV_SHOWS_LIST]);
+const pageNumber = ref(0);
 
-const tvShow = computed(() =>
-  tvShowsList.value.find((el: TVShowItem) => el.id === +route.params.id)
+const tvShowsList = computed<Array<TVShowItem>>(
+  () => store.getters[Getter.GET_TV_SHOWS_LIST]
 );
 
-const pageNumber = computed(() => tvShowsList.value.indexOf(tvShow.value));
+const tvShow = computed(() => {
+  const tvShowItem = tvShowsList.value.find(
+    (el: TVShowItem) => el.id === +route.params.id
+  );
+
+  if (tvShowItem) {
+    pageNumber.value = tvShowsList.value.indexOf(tvShowItem);
+  }
+
+  return tvShowItem;
+});
 </script>
 
 <style lang="scss">

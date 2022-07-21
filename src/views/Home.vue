@@ -10,7 +10,7 @@
             text
             @click="$router.push({ name: 'movies' })"
           >
-            ({{ store.getters[Getter.GET_MOVIES_LIST].length }})
+            ({{ moviesList.length }})
             {{ dictionary.showAll }}
 
             <base-icon name="arrow-right" />
@@ -19,7 +19,7 @@
       </base-caption>
 
       <base-carousel
-        v-bind="{ items: moviesList, itemsPerView: 5, spaceBetween: 10 }"
+        v-bind="{ items: slicedMoviesList, itemsPerView: 5, spaceBetween: 10 }"
         class="home-page__carousel"
       >
         <template #baseCarouselItem="{ item }">
@@ -84,7 +84,7 @@
             text
             @click="$router.push({ name: 'tv-shows' })"
           >
-            ({{ store.getters[Getter.GET_TV_SHOWS_LIST].length }})
+            ({{ tvShowsList.length }})
             {{ dictionary.showAll }}
 
             <base-icon name="arrow-right" />
@@ -93,7 +93,7 @@
       </base-caption>
 
       <base-carousel
-        v-bind="{ items: tvShowsList, itemsPerView: 5, spaceBetween: 10 }"
+        v-bind="{ items: slicedTvShowsList, itemsPerView: 5, spaceBetween: 10 }"
         class="home-page__carousel"
       >
         <template #baseCarouselItem="{ item }">
@@ -109,7 +109,7 @@
             </template>
 
             <base-heading type="h3">
-              {{ sliceText(item.name, 22, false) }}
+              {{ sliceText(item.name, 20, false) }}
             </base-heading>
 
             <base-badge color="secondary">
@@ -158,12 +158,11 @@ import { dictionary } from '../config/dictionary.config';
 
 const store = useStore();
 
-const moviesList = computed(() =>
-  store.getters[Getter.GET_MOVIES_LIST].slice(0, 20)
-);
-const tvShowsList = computed(() =>
-  store.getters[Getter.GET_TV_SHOWS_LIST].slice(0, 20)
-);
+const moviesList = computed(() => store.getters[Getter.GET_MOVIES_LIST]);
+const tvShowsList = computed(() => store.getters[Getter.GET_TV_SHOWS_LIST]);
+
+const slicedMoviesList = computed(() => moviesList.value.slice(0, 20));
+const slicedTvShowsList = computed(() => tvShowsList.value.slice(0, 20));
 </script>
 
 <style lang="scss" scoped>

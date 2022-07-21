@@ -85,14 +85,6 @@ export const actions: ActionTree<State, State> = {
 
     router.push({ name, params: { id: elements[index + dir].id } });
   },
-  [Action.ON_PAGINATION]({ commit }, { items, limit, page }) {
-    const paginatedItems = items.filter(
-      (_: any, i: number) => i >= page * limit && i < page * limit + limit
-    );
-
-    commit(Mutation.SET_CURRENT_PAGE, page);
-    commit(Mutation.ON_PAGINATION, paginatedItems);
-  },
   [Action.SET_CURRENT_PAGE]({ commit }, page) {
     commit(Mutation.SET_CURRENT_PAGE, page);
   },
