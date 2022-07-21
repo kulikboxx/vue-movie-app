@@ -19,7 +19,12 @@
       </base-caption>
 
       <base-carousel
-        v-bind="{ items: slicedMoviesList, itemsPerView: 5, spaceBetween: 10 }"
+        v-bind="{
+          breakpoints,
+          items: slicedMoviesList,
+          itemsPerView: 5,
+          spaceBetween: 10,
+        }"
         class="home-page__carousel"
       >
         <template #baseCarouselItem="{ item }">
@@ -93,7 +98,12 @@
       </base-caption>
 
       <base-carousel
-        v-bind="{ items: slicedTvShowsList, itemsPerView: 5, spaceBetween: 10 }"
+        v-bind="{
+          breakpoints,
+          items: slicedTvShowsList,
+          itemsPerView: 5,
+          spaceBetween: 10,
+        }"
         class="home-page__carousel"
       >
         <template #baseCarouselItem="{ item }">
@@ -157,6 +167,14 @@ import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
 
 const store = useStore();
+
+const breakpoints = {
+  250: { itemsPerView: 1 },
+  500: { itemsPerView: 2 },
+  750: { itemsPerView: 3 },
+  1000: { itemsPerView: 4 },
+  1200: { itemsPerView: 5 },
+};
 
 const moviesList = computed(() => store.getters[Getter.GET_MOVIES_LIST]);
 const tvShowsList = computed(() => store.getters[Getter.GET_TV_SHOWS_LIST]);
