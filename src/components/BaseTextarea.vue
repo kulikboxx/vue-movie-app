@@ -59,6 +59,7 @@ function textareaAutoGrow(e: Event) {
     @include base-element-styles;
     @include placeholder-style;
     min-height: 120px;
+    background-color: $main;
     border-color: $gray;
     resize: vertical;
 

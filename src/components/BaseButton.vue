@@ -6,7 +6,6 @@
       `base-button--${color}`,
       {
         'base-button--circle': circle,
-        'base-button--compact': compact,
         'base-button--square': square,
         'base-button--text': text,
         'base-button--uppercase': uppercase,
@@ -35,7 +34,6 @@ type ButtonType = 'button' | 'submit';
 interface Props {
   circle?: boolean;
   color?: ButtonColor;
-  compact?: boolean;
   disabled?: boolean;
   href?: string;
   link?: string;
@@ -58,8 +56,9 @@ withDefaults(defineProps<Props>(), {
 <style lang="scss">
 .base-button {
   @include base-element-styles;
-  font-size: 1.4rem;
-  font-weight: 400;
+  padding: 0.2em 0.6em;
+  font-size: $fsize-md;
+  font-weight: $fweight-lt;
   white-space: nowrap;
   user-select: none;
   cursor: pointer;
@@ -74,10 +73,6 @@ withDefaults(defineProps<Props>(), {
 
   &--danger {
     @include danger-element-palette;
-  }
-
-  &--compact {
-    padding: 0.2em 0.6em;
   }
 
   &--circle {

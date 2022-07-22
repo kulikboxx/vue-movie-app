@@ -1,11 +1,10 @@
 <template>
   <div class="base-select">
-    <slot />
     <base-popover>
       <template #basePopoverTrigger="{ isOpened, togglePopoverVisibility }">
         <base-input
           v-model="selectedValue"
-          v-bind="{ disabled, invalid, placeholder: 'Select value' }"
+          v-bind="{ disabled, invalid, placeholder }"
           readonly
           @click="togglePopoverVisibility()"
           @keydown.space="togglePopoverVisibility()"
@@ -21,6 +20,8 @@
               rotation
             />
           </template>
+
+          <slot />
         </base-input>
       </template>
 
@@ -55,19 +56,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref } from 'vue';
+import { ref, watch } from 'vue';
 
 interface Props {
   disabled?: boolean;
   displayKey?: string;
   invalid?: boolean;
   items: Array<string | Record<string, string>>;
+  modelValue: string;
+  placeholder: string;
 }
 
-withDefaults(defineProps<Props>(), { displayKey: 'option' });
+const props = withDefaults(defineProps<Props>(), {
+  displayKey: 'option',
+  placeholder: '',
+});
 
-const selectedValue = ref('');
-const baseSelectItemRef: Ref<Array<HTMLLIElement>> = ref([]);
+const emit = defineEmits(['update:modelValue']);
+
+const baseSelectItemRef = ref<Array<HTMLLIElement>>([]);
+const selectedValue = ref(props.modelValue);
 
 function setFocus(index: number) {
   baseSelectItemRef.value[index]?.focus();
@@ -75,11 +83,19 @@ function setFocus(index: number) {
 
 function setValue(value: string) {
   selectedValue.value = transformValue(value);
+  emit('update:modelValue', value);
 }
 
 function transformValue(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+watch(
+  () => props.modelValue,
+  () => {
+    selectedValue.value = props.modelValue;
+  }
+);
 </script>
 
 <style lang="scss">

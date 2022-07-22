@@ -1,27 +1,28 @@
 <template>
-  <base-animation
-    v-bind="{ name: 'base-alert', isVisible: alerts.length, tag: 'ul' }"
+  <transition-group
+    v-show="alerts.length"
+    name="base-alert"
+    class="base-alert"
+    tag="ul"
   >
-    <template #baseAnimationGroup>
-      <li
-        v-for="alert in alerts"
-        :key="alert.id"
-        :class="['base-alert__item', `base-alert__item--${alert.type}`]"
+    <li
+      v-for="alert in alerts"
+      :key="alert.id"
+      :class="['base-alert__item', `base-alert__item--${alert.type}`]"
+    >
+      <base-icon :name="alert.type" />
+
+      {{ alert.message }}
+
+      <base-button
+        color="inherit"
+        text
+        @click="store.dispatch(Action.HIDE_ALERT, alert.id)"
       >
-        <base-icon :name="alert.type" />
-
-        {{ alert.message }}
-
-        <base-button
-          color="inherit"
-          text
-          @click="store.dispatch(Action.HIDE_ALERT, alert.id)"
-        >
-          <base-icon name="close" />
-        </base-button>
-      </li>
-    </template>
-  </base-animation>
+        <base-icon name="close" />
+      </base-button>
+    </li>
+  </transition-group>
 </template>
 
 <script lang="ts" setup>
@@ -49,6 +50,7 @@ const alerts = computed(() => store.getters[Getter.GET_ALERTS]);
 
   &__item {
     @include base-element-styles(space-between, 1.5rem);
+    text-align: center;
 
     &--error {
       @include danger-element-palette;
@@ -61,6 +63,22 @@ const alerts = computed(() => store.getters[Getter.GET_ALERTS]);
     &--warning {
       @include warning-element-palette;
     }
+  }
+
+  &-move,
+  &-enter-active,
+  &-leave-active {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  &-leave-active {
+    position: absolute;
   }
 }
 </style>

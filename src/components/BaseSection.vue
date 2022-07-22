@@ -4,7 +4,7 @@
   </section>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .base-section {
   padding: 1.875em 0.625em;
 }
