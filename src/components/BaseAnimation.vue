@@ -26,25 +26,6 @@ defineProps<Props>();
 </script>
 
 <style lang="scss">
-// Alerts
-.base-alert {
-  &-move,
-  &-enter-active,
-  &-leave-active {
-    transition: opacity 0.4s ease, transform 0.4s ease;
-  }
-
-  &-enter-from,
-  &-leave-to {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-
-  &-leave-active {
-    position: absolute;
-  }
-}
-
 // Details page
 .details-page {
   &-enter-active,

@@ -54,6 +54,7 @@ function handleToggleChange(e: Event) {
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
 
@@ -78,18 +79,18 @@ function handleToggleChange(e: Event) {
     &::before {
       width: 34px;
       height: 20px;
-      border: 0.2rem solid $primary;
+      border: 0.2rem solid $gray;
       border-radius: 1.6rem;
       transition: background-color 0.6s;
     }
 
     &::after {
       position: absolute;
-      top: 3px;
-      left: 3px;
-      height: 18px;
-      width: 18px;
-      background-color: $primary;
+      top: 4px;
+      left: 4px;
+      height: 16px;
+      width: 16px;
+      background-color: $gray;
       border-radius: 50%;
       transition: left 0.3s, background-color 0.6s;
     }
@@ -100,8 +101,7 @@ function handleToggleChange(e: Event) {
       }
 
       &::after {
-        left: 17px;
-        background-color: $white;
+        left: 18px;
       }
     }
 
@@ -109,7 +109,7 @@ function handleToggleChange(e: Event) {
       outline: none;
 
       &-visible::before {
-        outline: 0.4rem solid rgba($primary, 0.35);
+        outline: 0.4rem solid rgba($secondary, 0.6);
       }
     }
 

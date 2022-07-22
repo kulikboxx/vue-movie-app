@@ -54,6 +54,7 @@ function handleCheckboxChange(e: Event) {
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
 
@@ -72,20 +73,20 @@ function handleCheckboxChange(e: Event) {
     &::after {
       content: '';
       display: inline-block;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       cursor: pointer;
     }
 
     &::before {
-      border: 0.2rem solid $primary;
+      border: 0.2rem solid $gray;
       border-radius: 0.4rem;
     }
 
     &::after {
       position: absolute;
       inset: 0;
-      background-color: $primary;
+      background-color: $gray;
       border: 0.2rem solid transparent;
       border-radius: 0.4rem;
       transition: transform 0.3s;
@@ -100,7 +101,7 @@ function handleCheckboxChange(e: Event) {
       outline: none;
 
       &-visible::before {
-        outline: 0.4rem solid rgba($primary, 0.2);
+        outline: 0.4rem solid rgba($secondary, 0.6);
       }
     }
 

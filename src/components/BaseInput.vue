@@ -52,7 +52,7 @@
 <script lang="ts" setup>
 import { ref, Ref, watch } from 'vue';
 
-type InputType = 'text' | 'number' | 'tel' | 'email';
+type InputType = 'text' | 'tel' | 'email';
 
 interface Props {
   autofocus?: boolean;
@@ -100,6 +100,7 @@ watch(isFocused, () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  background-color: $main;
 
   &__wrapper {
     @include base-element-styles(space-between);

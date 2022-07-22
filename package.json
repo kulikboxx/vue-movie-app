@@ -9,6 +9,8 @@
     "test": "vitest run --coverage --reporter dot --silent"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.0-alpha.42",
+    "@vuelidate/validators": "^2.0.0-alpha.30",
     "axios": "^0.27.2",
     "swiper": "^8.3.0",
     "unplugin-vue-components": "^0.21.1",

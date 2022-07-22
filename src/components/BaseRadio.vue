@@ -49,6 +49,7 @@ function handleRadioChange(e: Event) {
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
 
@@ -67,20 +68,20 @@ function handleRadioChange(e: Event) {
     &::after {
       content: '';
       display: inline-block;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       cursor: pointer;
     }
 
     &::before {
-      border: 0.2rem solid $primary;
+      border: 0.2rem solid $gray;
     }
 
     &::after {
       position: absolute;
       inset: 0;
-      background-color: $primary;
+      background-color: $gray;
       border: 0.2rem solid transparent;
       transition: transform 0.3s;
       transform: scale(0);
@@ -94,7 +95,7 @@ function handleRadioChange(e: Event) {
       outline: none;
 
       &-visible::before {
-        outline: 0.4rem solid rgba($primary, 0.2);
+        outline: 0.4rem solid rgba($secondary, 0.6);
       }
     }
 

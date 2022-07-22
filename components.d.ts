@@ -28,6 +28,7 @@ declare module '@vue/runtime-core' {
     BasePagination: typeof import('./src/components/BasePagination.vue')['default']
     BaseParagraph: typeof import('./src/components/BaseParagraph.vue')['default']
     BasePopover: typeof import('./src/components/BasePopover.vue')['default']
+    BasePoster: typeof import('./src/components/BasePoster.vue')['default']
     BaseRadio: typeof import('./src/components/BaseRadio.vue')['default']
     BaseScrollUp: typeof import('./src/components/BaseScrollUp.vue')['default']
     BaseSection: typeof import('./src/components/BaseSection.vue')['default']

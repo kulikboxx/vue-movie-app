@@ -37,7 +37,6 @@
         <template #layoutGridDetailsActions>
           <base-button
             color="secondary"
-            compact
             @click="$router.push({ name: 'home' })"
           >
             <base-icon
@@ -51,7 +50,6 @@
 
           <base-button
             color="secondary"
-            compact
             @click="$router.push({ name: 'tv-shows' })"
           >
             <base-icon
@@ -66,7 +64,6 @@
           <base-button
             v-if="pageNumber > 0"
             color="secondary"
-            compact
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
                 name: 'tv-show',
@@ -88,7 +85,6 @@
           <base-button
             v-if="pageNumber < tvShowsList.length - 1"
             color="secondary"
-            compact
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
                 name: 'tv-show',

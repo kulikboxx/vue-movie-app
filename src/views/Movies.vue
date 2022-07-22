@@ -39,7 +39,6 @@
             <template #baseCardActions>
               <base-button
                 color="primary"
-                compact
                 @click="
                   $router.push({
                     name: 'movie',
