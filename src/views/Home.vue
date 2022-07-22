@@ -2,7 +2,7 @@
   <base-section class="home-page__section">
     <base-wrapper>
       <base-caption class="home-page__caption">
-        {{ dictionary.popularMovies }} ({{ moviesList.length }})
+        {{ dictionary.popularMovies }} ({{ slicedMoviesList.length }})
 
         <template #baseCaptionSuffix>
           <base-button
@@ -81,7 +81,7 @@
       <base-divider />
 
       <base-caption class="home-page__caption">
-        {{ dictionary.popularTvShows }} ({{ tvShowsList.length }})
+        {{ dictionary.popularTvShows }} ({{ slicedTvShowsList.length }})
 
         <template #baseCaptionSuffix>
           <base-button
