@@ -1,13 +1,19 @@
 <template>
   <div
-    class="base-carousel"
+    :class="[
+      'base-carousel',
+      { 'base-carousel--disabled': isCarouselDisabled },
+    ]"
     ref="baseCarouselRef"
-    @touchstart="onTouch($event)"
-    @touchend="onTouch($event)"
-    @transitionend="checkShiftX()"
+    @transitionstart="toggleCarouselDisabled(true)"
+    @transitionend="toggleCarouselDisabled(false), checkShiftX()"
   >
     <div class="base-carousel__line">
-      <ul class="base-carousel__wrapper">
+      <ul
+        class="base-carousel__wrapper"
+        @touchstart="onTouch($event)"
+        @touchend="onTouch($event)"
+      >
         <li
           v-for="(item, index) in computedItems"
           :key="index"
@@ -53,6 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const baseCarouselRef = ref<HTMLDivElement>();
+const isCarouselDisabled = ref(false);
 const loopTimer = ref<NodeJS.Timer>();
 
 const carousel = reactive({
@@ -68,22 +75,6 @@ const carousel = reactive({
   visibleItems: 1,
 });
 
-const computedItems = computed(() => [
-  ...props.items,
-  ...props.items,
-  ...props.items,
-]);
-
-const carouselObserver = new ResizeObserver((entries) => {
-  entries.forEach((entry) => {
-    computeItemWidth();
-    computeWhiteSpaces();
-    setItemWidth(entry.contentBoxSize[0].inlineSize);
-    setLineShift();
-    manageTransition(swipeItem);
-  });
-});
-
 const computedBreakpoints = computed(() => {
   const breakpoints = [];
 
@@ -97,39 +88,56 @@ const computedBreakpoints = computed(() => {
   return breakpoints;
 });
 
-function computeWhiteSpaces() {
-  carousel.whiteSpaces =
-    parseFloat(carousel.itemsGap) * (carousel.visibleItems - 1);
-}
+const lastBreakpoint = computed(
+  () => computedBreakpoints.value[computedBreakpoints.value.length - 1]
+);
 
-function computeItemWidth() {
+const computedItems = computed(() => [
+  ...props.items.slice(-lastBreakpoint.value.visibleItems),
+  ...props.items,
+  ...props.items.slice(0, lastBreakpoint.value.visibleItems),
+]);
+
+function computeItemWidth(carouselWidth: number) {
   const breakpointsArray = computedBreakpoints.value;
   const screenWidth = window.innerWidth;
-  const lastBreakpoint = breakpointsArray[breakpointsArray.length - 1];
 
   for (let i = 0; i < breakpointsArray.length; i++) {
     if (
-      screenWidth < lastBreakpoint.breakpoint &&
+      screenWidth < lastBreakpoint.value.breakpoint &&
       screenWidth >= breakpointsArray[i].breakpoint &&
       screenWidth <= breakpointsArray[i + 1].breakpoint
     ) {
       carousel.visibleItems = breakpointsArray[i].visibleItems;
-    } else if (screenWidth >= lastBreakpoint.breakpoint) {
-      carousel.visibleItems = lastBreakpoint.visibleItems;
+    } else if (screenWidth >= lastBreakpoint.value.breakpoint) {
+      carousel.visibleItems = lastBreakpoint.value.visibleItems;
     }
   }
+
+  computeWhiteSpaces(carouselWidth);
+}
+
+function computeWhiteSpaces(carouselWidth: number) {
+  carousel.whiteSpaces =
+    parseFloat(carousel.itemsGap) * (carousel.visibleItems - 1);
+
+  setItemWidth(carouselWidth);
 }
 
 function setItemWidth(carouselWidth: number) {
   carousel.itemWidth =
     (carouselWidth - carousel.whiteSpaces) / carousel.visibleItems + 'px';
+
+  setLineShift();
 }
 
 function setLineShift() {
   carousel.lineShift =
     -(parseFloat(carousel.itemWidth) + props.spaceBetween) *
-      props.items.length +
+      lastBreakpoint.value.visibleItems +
     'px';
+
+  observeTransition(swipeItem);
 }
 
 function swipeItem(num: number = 0) {
@@ -149,10 +157,14 @@ function switchTransition(isTransition: boolean = true) {
     : 'none';
 }
 
-function manageTransition(callback: Function) {
+function observeTransition(callback: Function) {
   switchTransition(false);
   callback();
   setTimeout(() => switchTransition(true));
+}
+
+function toggleCarouselDisabled(val: boolean) {
+  isCarouselDisabled.value = val;
 }
 
 function checkShiftX() {
@@ -165,7 +177,7 @@ function checkShiftX() {
     parseFloat(carousel.shiftX) >= itemWidthWithWhiteSpace * props.itemsPerView;
 
   if (startX || endX) {
-    manageTransition(() => {
+    observeTransition(() => {
       carousel.shiftX = startX
         ? '0px'
         : `${
@@ -209,6 +221,12 @@ function loopCarousel() {
   swipeItem(-1);
 }
 
+const carouselObserver = new ResizeObserver((entries) => {
+  entries.forEach((entry) => {
+    computeItemWidth(entry.contentBoxSize[0].inlineSize);
+  });
+});
+
 onMounted(() => {
   switchTransition(true);
   updateLoopTimer(true);
@@ -233,8 +251,13 @@ onBeforeUnmount(() => {
 <style lang="scss">
 .base-carousel {
   margin-inline: auto;
+  padding-inline: 0.0625em;
   max-width: 1200px;
   overflow: hidden;
+
+  &--disabled {
+    pointer-events: none;
+  }
 
   &__line {
     transform: translateX(v-bind('carousel.lineShift'));
