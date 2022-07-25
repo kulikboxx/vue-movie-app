@@ -17,6 +17,7 @@
           <base-input
             v-model="formValues.firstName"
             v-bind="{ invalid: v$.firstName.$error }"
+            autofocus
             clearable
             placeholder="Required"
             type="text"
@@ -100,12 +101,15 @@ import { computed, reactive } from 'vue';
 import { useStore, Getter, Action } from '../store';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
+import { MovieItem } from '../interfaces';
 import { randomNumber } from '../helpers/use-random-number';
 import { dictionary } from '../config/dictionary.config';
 
 const store = useStore();
 
-const moviesList = computed(() => store.getters[Getter.GET_MOVIES_LIST]);
+const moviesList = computed<Array<MovieItem>>(
+  () => store.getters[Getter.GET_MOVIES_LIST]
+);
 
 const moviePoster = computed(() => {
   return moviesList.value[randomNumber(0, moviesList.value.length - 1)];

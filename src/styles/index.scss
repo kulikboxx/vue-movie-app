@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  @include base-scrollbar-styles(1rem, $primary);
+  @include base-scrollbar-styles(1rem);
   color: $white;
   font-size: $fsize-rg;
   font-family: 'Poppins', sans-serif;

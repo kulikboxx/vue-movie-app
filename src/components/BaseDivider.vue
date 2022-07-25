@@ -1,5 +1,5 @@
 <template>
-  <div :class="['base-divider', { 'base-divider--centered': centered }]"></div>
+  <hr :class="['base-divider', { 'base-divider--centered': centered }]" />
 </template>
 
 <script lang="ts" setup>
@@ -16,6 +16,7 @@ defineProps<Props>();
   max-width: 1200px;
   height: 1px;
   background-color: $gray;
+  border: none;
 
   &--centered {
     margin-inline: auto;

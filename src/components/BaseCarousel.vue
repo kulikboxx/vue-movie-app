@@ -264,8 +264,7 @@ onBeforeUnmount(() => {
   }
 
   &__line,
-  &__wrapper,
-  &__item {
+  &__wrapper {
     width: max-content;
   }
 

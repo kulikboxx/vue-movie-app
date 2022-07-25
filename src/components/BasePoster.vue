@@ -34,7 +34,7 @@ withDefaults(defineProps<Props>(), { height: '350px', position: 'left' });
 
   &::after {
     content: '';
-    background-color: rgba($primary, 0.85);
+    background-color: rgba($secondary, 0.75);
     z-index: -1;
   }
 

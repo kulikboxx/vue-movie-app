@@ -3,11 +3,11 @@
     <base-wrapper>
       <layout-grid-details>
         <template #layoutGridDetailsImage>
-          <base-image v-bind="{ alt: tvShow?.name, src: tvShow?.poster_lg }" />
+          <base-image v-bind="{ alt: tvShow?.title, src: tvShow?.poster_lg }" />
         </template>
 
         <base-heading type="h1" color="danger">
-          {{ pageNumber + 1 }}. {{ tvShow?.name }}
+          {{ pageNumber + 1 }}. {{ tvShow?.title }}
         </base-heading>
 
         <base-badge color="danger">
@@ -66,7 +66,7 @@
             color="secondary"
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
-                name: 'tv-show',
+                name: tvShow?.route,
                 getter: Getter.GET_TV_SHOWS_LIST,
                 elId: +route.params.id,
                 dir: -1,
@@ -87,7 +87,7 @@
             color="secondary"
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
-                name: 'tv-show',
+                name: tvShow?.route,
                 getter: Getter.GET_TV_SHOWS_LIST,
                 elId: +route.params.id,
                 dir: 1,
@@ -106,7 +106,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore, Action, Getter, TVShowItem } from '../store';
+import { useStore, Action, Getter } from '../store';
+import { TVShowItem } from '../interfaces';
 import { dictionary } from '../config/dictionary.config';
 
 import LayoutGridDetails from '../layout/LayoutGridDetails.vue';

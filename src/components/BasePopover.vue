@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 defineEmits(['open']);
 
-const basePopoverRef: Ref<HTMLDivElement | undefined> = ref();
+const basePopoverRef = ref<HTMLDivElement>();
 const isOpened = ref(false);
 
 function togglePopoverVisibility() {

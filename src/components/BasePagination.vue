@@ -38,11 +38,12 @@
 
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
+import { MovieItem, TVShowItem } from '../interfaces';
 import { useStore, Action, Getter } from '../store';
 
 const store = useStore();
 
-type ItemType = Record<PropertyKey, unknown>;
+type ItemType = MovieItem | TVShowItem;
 
 interface Props {
   items: Array<ItemType>;
@@ -86,7 +87,7 @@ function paginatePages(page: number) {
   const limit = props.limit;
 
   return props.items.filter(
-    (el: ItemType, i: number) => i >= page * limit && i < page * limit + limit
+    (item: ItemType, i: number) => i >= page * limit && i < page * limit + limit
   );
 }
 

@@ -6,9 +6,7 @@
       <layout-header-nav :is-visible="navVisibility" />
 
       <div class="app-header__actions">
-        <base-button color="primary" text>
-          <base-icon name="search" size="24px" />
-        </base-button>
+        <base-search />
 
         <layout-header-button
           :rotation="navVisibility"
@@ -26,6 +24,7 @@ import { useRoute } from 'vue-router';
 
 import LayoutHeaderNav from './LayoutHeaderNav.vue';
 import LayoutHeaderButton from './LayoutHeaderButton.vue';
+import BaseSearch from '../components/BaseSearch.vue';
 
 const route = useRoute();
 

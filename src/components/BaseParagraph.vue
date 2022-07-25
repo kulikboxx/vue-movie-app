@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-type ParagraphColor = 'gray' | 'inherit' | 'primary' | 'white';
+type ParagraphColor = 'gray' | 'inherit' | 'primary';
 type FontSize = 'sm' | 'md' | 'lg';
 
 interface Props {
@@ -24,8 +24,7 @@ withDefaults(defineProps<Props>(), { color: 'inherit', size: 'md' });
 
 <style lang="scss">
 .base-paragraph {
-  color: inherit;
-  font-weight: 400;
+  font-weight: $fweight-lt;
   line-height: 150%;
 
   &--gray {
@@ -34,10 +33,6 @@ withDefaults(defineProps<Props>(), { color: 'inherit', size: 'md' });
 
   &--primary {
     color: $primary;
-  }
-
-  &--white {
-    color: $white;
   }
 
   &--sm {

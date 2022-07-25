@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     BasePoster: typeof import('./src/components/BasePoster.vue')['default']
     BaseRadio: typeof import('./src/components/BaseRadio.vue')['default']
     BaseScrollUp: typeof import('./src/components/BaseScrollUp.vue')['default']
+    BaseSearch: typeof import('./src/components/BaseSearch.vue')['default']
     BaseSection: typeof import('./src/components/BaseSection.vue')['default']
     BaseSelect: typeof import('./src/components/BaseSelect.vue')['default']
     BaseSkeleton: typeof import('./src/components/BaseSkeleton.vue')['default']

@@ -20,4 +20,3 @@ export function useStore() {
 }
 
 export * from './types';
-export * from './interfaces';

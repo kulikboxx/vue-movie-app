@@ -72,7 +72,7 @@
             color="secondary"
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
-                name: 'movie',
+                name: movie?.route,
                 getter: Getter.GET_MOVIES_LIST,
                 elId: +route.params.id,
                 dir: -1,
@@ -93,7 +93,7 @@
             color="secondary"
             @click="
               store.dispatch(Action.CHANGE_PAGE, {
-                name: 'movie',
+                name: movie?.route,
                 getter: Getter.GET_MOVIES_LIST,
                 elId: +route.params.id,
                 dir: 1,
@@ -112,7 +112,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore, Action, Getter, MovieItem } from '../store';
+import { useStore, Action, Getter } from '../store';
+import { MovieItem } from '../interfaces';
 import { dictionary } from '../config/dictionary.config';
 
 import LayoutGridDetails from '../layout/LayoutGridDetails.vue';
