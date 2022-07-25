@@ -28,9 +28,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useStore, Action, Getter } from '../store';
+import { AlertItem } from '../interfaces';
 
 const store = useStore();
-const alerts = computed(() => store.getters[Getter.GET_ALERTS]);
+const alerts = computed<Array<AlertItem>>(
+  () => store.getters[Getter.GET_ALERTS]
+);
 </script>
 
 <style lang="scss" scoped>

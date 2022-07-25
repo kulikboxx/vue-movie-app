@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, Ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 type InputType = 'text' | 'tel' | 'email';
 
@@ -73,8 +73,10 @@ withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:modelValue']);
 
+defineExpose({ focus });
+
 const isFocused = ref(false);
-const baseInputRef: Ref<HTMLInputElement | undefined> = ref();
+const baseInputRef = ref<HTMLInputElement>();
 
 function toggleFocus() {
   isFocused.value = !isFocused.value;
@@ -85,7 +87,7 @@ function focus() {
 }
 
 function handleInputChange(e: Event) {
-  emit('update:modelValue', (e.target as HTMLInputElement).value);
+  emit('update:modelValue', (e.target as HTMLInputElement).value.trimStart());
 }
 
 watch(isFocused, () => {
@@ -104,8 +106,9 @@ watch(isFocused, () => {
 
   &__wrapper {
     @include base-element-styles(space-between);
-    border-color: $gray;
     flex: 1;
+    width: 100%;
+    border-color: $gray;
 
     &--focused {
       outline: 0.4rem solid rgba($gray, 0.5);

@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 type HeadingType = 'h1' | 'h2' | 'h3' | 'h4';
-type HeadingColor = 'inherit' | 'primary' | 'white';
+type HeadingColor = 'inherit' | 'primary';
 
 interface Props {
   color?: HeadingColor;
@@ -21,16 +21,11 @@ withDefaults(defineProps<Props>(), { color: 'inherit', type: 'h2' });
 
 <style lang="scss">
 .base-heading {
-  color: inherit;
   font-weight: $fweight-md;
   line-height: 150%;
 
   &--primary {
     color: $primary;
-  }
-
-  &--white {
-    color: $white;
   }
 
   &--h1 {

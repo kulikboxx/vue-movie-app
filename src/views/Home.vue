@@ -9,7 +9,7 @@
     <base-paragraph>{{ topMoviePoster.overview }}</base-paragraph>
 
     <base-button
-      color="secondary"
+      color="danger"
       @click="
         $router.push({ name: 'movie', params: { id: topMoviePoster.id } })
       "
@@ -100,16 +100,16 @@
 
   <base-poster
     v-bind="{
-      alt: randomTvShowPoster.name,
+      alt: randomTvShowPoster.title,
       src: randomTvShowPoster.backdrop_lg,
     }"
     position="center"
   >
-    <base-heading type="h1">{{ randomTvShowPoster.name }}</base-heading>
+    <base-heading type="h1">{{ randomTvShowPoster.title }}</base-heading>
     <base-paragraph>{{ randomTvShowPoster.overview }}</base-paragraph>
 
     <base-button
-      color="secondary"
+      color="danger"
       @click="
         $router.push({ name: 'tv-show', params: { id: randomTvShowPoster.id } })
       "
@@ -146,7 +146,7 @@
       class="home-page__carousel"
     >
       <template #baseCarouselItem="{ item }">
-        <base-card v-bind="{ alt: item.name, src: item.backdrop_md }">
+        <base-card v-bind="{ alt: item.title, src: item.backdrop_md }">
           <template #baseCardTop>
             <base-badge color="danger">
               {{ transformText(item.original_language) }}
@@ -158,7 +158,7 @@
           </template>
 
           <base-heading type="h3">
-            {{ sliceText(item.name, 20, false) }}
+            {{ sliceText(item.title, 20, false) }}
           </base-heading>
 
           <base-badge color="secondary">
@@ -207,7 +207,7 @@
     <base-paragraph>{{ bottomMoviePoster.overview }}</base-paragraph>
 
     <base-button
-      color="secondary"
+      color="danger"
       @click="
         $router.push({ name: 'movie', params: { id: bottomMoviePoster.id } })
       "
@@ -220,6 +220,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useStore, Getter } from '../store';
+import { MovieItem, TVShowItem } from '../interfaces';
 import { randomNumber } from '../helpers/use-random-number';
 import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
@@ -234,23 +235,28 @@ const breakpoints = {
   1200: { itemsPerView: 5 },
 };
 
-const moviesList = computed(() => store.getters[Getter.GET_MOVIES_LIST]);
-const tvShowsList = computed(() => store.getters[Getter.GET_TV_SHOWS_LIST]);
+const moviesList = computed<Array<MovieItem>>(
+  () => store.getters[Getter.GET_MOVIES_LIST]
+);
+
+const tvShowsList = computed<Array<TVShowItem>>(
+  () => store.getters[Getter.GET_TV_SHOWS_LIST]
+);
 
 const slicedMoviesList = computed(() => moviesList.value.slice(0, 20));
 const slicedTvShowsList = computed(() => tvShowsList.value.slice(0, 20));
 
-const topMoviePoster = computed(() => {
-  return moviesList.value[randomNumber(0, moviesList.value.length - 1)];
-});
+const topMoviePoster = computed(
+  () => moviesList.value[randomNumber(0, moviesList.value.length - 1)]
+);
 
-const bottomMoviePoster = computed(() => {
-  return moviesList.value[randomNumber(0, moviesList.value.length - 1)];
-});
+const bottomMoviePoster = computed(
+  () => moviesList.value[randomNumber(0, moviesList.value.length - 1)]
+);
 
-const randomTvShowPoster = computed(() => {
-  return tvShowsList.value[randomNumber(0, tvShowsList.value.length - 1)];
-});
+const randomTvShowPoster = computed(
+  () => tvShowsList.value[randomNumber(0, tvShowsList.value.length - 1)]
+);
 </script>
 
 <style lang="scss" scoped>

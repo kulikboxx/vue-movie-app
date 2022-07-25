@@ -41,7 +41,7 @@
                 color="primary"
                 @click="
                   $router.push({
-                    name: 'movie',
+                    name: item.route,
                     params: { id: item.id },
                   })
                 "
@@ -64,7 +64,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useStore, Getter, MovieItem } from '../store';
+import { useStore, Getter } from '../store';
+import { MovieItem } from '../interfaces';
 import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
 

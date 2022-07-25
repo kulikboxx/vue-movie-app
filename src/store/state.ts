@@ -1,4 +1,4 @@
-import { AlertItem, MovieItem, TVShowItem } from './interfaces';
+import { AlertItem, MovieItem, TVShowItem } from '../interfaces';
 
 export interface State {
   alerts: Array<AlertItem>;

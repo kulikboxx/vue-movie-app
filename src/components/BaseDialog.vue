@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, Ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 interface Props {
   isVisible?: boolean;
@@ -36,8 +36,21 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), { duration: 400 });
 const emit = defineEmits(['close']);
 
-const baseDialogRef: Ref<HTMLDialogElement | undefined> = ref();
+const baseDialogRef = ref<HTMLDialogElement>();
 const duration = computed(() => props.duration + 'ms');
+
+function toggleBodyOverflow(isHidden: boolean) {
+  const scrollBarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
+
+  if (isHidden) {
+    document.body.style.overflow = 'hidden';
+    document.body.style.paddingRight = scrollBarWidth + 'px';
+  } else {
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '0px';
+  }
+}
 
 function closeDialog() {
   emit('close');
@@ -48,9 +61,11 @@ watch(
   () => {
     if (props.isVisible) {
       baseDialogRef.value?.showModal();
+      toggleBodyOverflow(true);
     } else {
       setTimeout(() => {
         baseDialogRef.value?.close();
+        toggleBodyOverflow(false);
       }, props.duration);
     }
   }
@@ -66,32 +81,34 @@ $duration: v-bind(duration);
   place-items: center;
   inset: 0;
   margin: 0;
+  padding-inline: 0.25em;
   width: 100%;
   height: 100vh;
   color: inherit;
-  background-color: $backdrop;
+  background-color: rgba($main, 0.95);
   border: none;
-  z-index: 5000;
+  z-index: 50000;
 
   &__body {
     display: flex;
     flex-direction: column;
-    margin-inline: 0.375em;
-    padding: 1.625em 2.25em 2.25em;
-    max-width: 500px;
+    padding: 0.6em;
+    width: 100%;
+    max-width: 600px;
     max-height: 90vh;
-    background-color: $white;
+    background-color: $main;
+    border: 0.1rem solid $gray;
     border-radius: 1.6rem;
   }
 
   &__close {
-    align-self: flex-end;
-    transform: translateX(8px);
+    align-self: center;
   }
 
   &__content {
     @include base-scrollbar-styles(0.5rem);
     margin-top: 0.375em;
+    padding: 0.25em;
     overflow-y: auto;
   }
 

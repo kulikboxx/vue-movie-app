@@ -8,7 +8,6 @@
         'base-button--circle': circle,
         'base-button--square': square,
         'base-button--text': text,
-        'base-button--uppercase': uppercase,
       },
     ]"
   >
@@ -43,7 +42,6 @@ interface Props {
   square?: boolean;
   text?: boolean;
   type?: ButtonType;
-  uppercase?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -81,11 +79,8 @@ withDefaults(defineProps<Props>(), {
     aspect-ratio: 1/1;
   }
 
-  &--text {
-    padding: 0;
-  }
-
-  &--inherit {
+  &--inherit,
+  &__link {
     color: inherit;
   }
 
@@ -112,14 +107,6 @@ withDefaults(defineProps<Props>(), {
     &.base-button--danger {
       color: $pink;
     }
-  }
-
-  &--uppercase {
-    text-transform: uppercase;
-  }
-
-  &__link {
-    color: inherit;
   }
 }
 </style>

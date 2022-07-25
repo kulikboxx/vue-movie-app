@@ -20,9 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const svgData = ref('');
-const getSvgData = import(`../assets/icons/${props.name}.svg?raw`);
-
-getSvgData.then((data) => {
+import(`../assets/icons/${props.name}.svg?raw`).then((data) => {
   try {
     svgData.value = data.default;
   } catch (e) {

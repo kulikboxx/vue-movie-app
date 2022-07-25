@@ -113,6 +113,7 @@ watch(
     &-item {
       padding: 0.375em 0.625em;
       border-radius: 0.4rem;
+      cursor: pointer;
 
       &:hover,
       &:focus-visible {

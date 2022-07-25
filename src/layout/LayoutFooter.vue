@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts" setup>
-import LayoutFooterList from './LayoutFooterList.vue';
 import { dictionary } from '../config/dictionary.config';
+
+import LayoutFooterList from './LayoutFooterList.vue';
 </script>
 
 <style lang="scss" scoped>

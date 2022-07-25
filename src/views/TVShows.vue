@@ -12,7 +12,7 @@
           <base-card
             v-for="item in paginatedList"
             :key="item.id"
-            v-bind="{ alt: item.name, src: item.backdrop_md }"
+            v-bind="{ alt: item.title, src: item.backdrop_md }"
           >
             <template #baseCardTop>
               <base-badge color="danger">
@@ -25,7 +25,7 @@
             </template>
 
             <base-heading type="h3">
-              {{ sliceText(item.name, 20, false) }}
+              {{ sliceText(item.title, 20, false) }}
             </base-heading>
 
             <base-badge color="secondary">
@@ -40,7 +40,7 @@
               <base-button
                 color="primary"
                 @click="
-                  $router.push({ name: 'tv-show', params: { id: item.id } })
+                  $router.push({ name: item.route, params: { id: item.id } })
                 "
               >
                 {{ dictionary.details }}
@@ -61,7 +61,8 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useStore, Getter, TVShowItem } from '../store';
+import { useStore, Getter } from '../store';
+import { TVShowItem } from '../interfaces';
 import { transformText, sliceText } from '../helpers/use-text';
 import { dictionary } from '../config/dictionary.config';
 
