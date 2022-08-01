@@ -1,5 +1,4 @@
 export const dictionary = {
-  adult: 'Adult',
   back: 'Back',
   backToMovies: 'Movies',
   backToTvShows: 'TV Shows',

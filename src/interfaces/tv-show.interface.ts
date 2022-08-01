@@ -11,6 +11,7 @@ export interface TVShowItem {
   poster_lg: string;
   poster_md: string;
   poster_path: string;
+  release_date: string;
   route: string;
   title: string;
   vote_average: number;

@@ -37,9 +37,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
+import { useStore } from '../store';
 import { MovieItem, TVShowItem } from '../interfaces';
-import { useStore, Action, Getter } from '../store';
 
 const store = useStore();
 
@@ -47,14 +47,16 @@ type ItemType = MovieItem | TVShowItem;
 
 interface Props {
   items: Array<ItemType>;
-  limit: number;
+  visibleItems: number;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits(['change']);
 
-const totalPages = computed(() => Math.ceil(props.items.length / props.limit));
-const currentPage = computed(() => +store.getters[Getter.GET_CURRENT_PAGE]);
+const totalPages = computed(() =>
+  Math.ceil(props.items.length / props.visibleItems)
+);
+const currentPage = computed(() => store.getCurrentPage);
 const pagesArray = computed(() => Array.from(Array(totalPages.value).keys()));
 
 const transformedPages = computed(() => {
@@ -84,7 +86,7 @@ function typeofValue(value: string | number) {
 }
 
 function paginatePages(page: number) {
-  const limit = props.limit;
+  const limit = props.visibleItems;
 
   return props.items.filter(
     (item: ItemType, i: number) => i >= page * limit && i < page * limit + limit
@@ -92,11 +94,18 @@ function paginatePages(page: number) {
 }
 
 function setPage(page: number) {
-  store.dispatch(Action.SET_CURRENT_PAGE, page);
+  store.setCurrentPage(page);
   emit('change', paginatePages(page));
 }
 
-onMounted(() => setPage(0));
+watch(
+  () => props.items,
+  () => {
+    setPage(currentPage.value);
+  }
+);
+
+onMounted(() => setPage(currentPage.value));
 </script>
 
 <style lang="scss" scoped>

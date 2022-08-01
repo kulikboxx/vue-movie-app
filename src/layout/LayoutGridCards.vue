@@ -7,6 +7,7 @@
 <style lang="scss">
 .app-grid-cards {
   display: grid;
+  grid-auto-rows: min-content;
   gap: 1.2rem;
 }
 
@@ -27,10 +28,4 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
-// @media (min-width: 1200px) {
-//   .app-grid-cards {
-//     grid-template-columns: repeat(5, 1fr);
-//   }
-// }
 </style>

@@ -7,13 +7,13 @@
     ]"
   >
     <input
-      v-bind="{ checked: modelValue.includes(value), disabled, value }"
+      v-bind="{ ...$attrs, checked: modelValue, disabled }"
       :class="[
         'base-toggle__element',
         { 'base-toggle__element--invalid': invalid },
       ]"
       type="checkbox"
-      @change="handleToggleChange($event)"
+      @change.stop="handleToggleChange($event)"
     />
     <slot />
   </label>
@@ -23,28 +23,15 @@
 interface Props {
   disabled?: boolean;
   invalid?: boolean;
-  modelValue?: Array<string>;
-  value?: string;
+  modelValue?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  modelValue: () => [],
-  value: '',
-});
+defineProps<Props>();
 
 const emit = defineEmits(['update:modelValue']);
 
 function handleToggleChange(e: Event) {
-  const toggle = e.target as HTMLInputElement;
-  const values = [...props.modelValue];
-
-  if (toggle.checked) {
-    values.push(toggle.value);
-  } else {
-    values.splice(values.indexOf(toggle.value), 1);
-  }
-
-  emit('update:modelValue', values);
+  emit('update:modelValue', (e.target as HTMLInputElement).checked);
 }
 </script>
 
@@ -53,7 +40,7 @@ function handleToggleChange(e: Event) {
   &__label {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
@@ -77,32 +64,26 @@ function handleToggleChange(e: Event) {
     }
 
     &::before {
-      width: 34px;
-      height: 20px;
+      width: 30px;
+      height: 18px;
       border: 0.2rem solid $gray;
       border-radius: 1.6rem;
-      transition: background-color 0.6s;
     }
 
     &::after {
       position: absolute;
       top: 4px;
       left: 4px;
-      height: 16px;
-      width: 16px;
+      height: 14px;
+      width: 14px;
       background-color: $gray;
       border-radius: 50%;
       transition: left 0.3s, background-color 0.6s;
     }
 
-    &:checked {
-      &::before {
-        background-color: $primary;
-      }
-
-      &::after {
-        left: 18px;
-      }
+    &:checked::after {
+      left: 16px;
+      background-color: $primary;
     }
 
     &:focus {

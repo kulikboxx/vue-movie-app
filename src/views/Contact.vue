@@ -1,118 +1,116 @@
 <template>
-  <base-poster
-    v-bind="{
-      alt: moviePoster.title,
-      src: moviePoster.backdrop_lg,
-    }"
-    height="200px"
-    position="center"
-  >
-    <base-heading type="h1">{{ dictionary.contactUs }}</base-heading>
-  </base-poster>
+  <article class="contact-page">
+    <base-poster
+      v-bind="{
+        alt: moviePoster.title,
+        src: moviePoster.backdrop_lg,
+      }"
+      height="200px"
+      position="center"
+    >
+      <base-heading type="h1">{{ dictionary.contactUs }}</base-heading>
+    </base-poster>
 
-  <base-section class="contact-page__section">
-    <base-wrapper class="contact-page__wrapper">
-      <form class="contact-page__form" @submit.prevent="onFormSubmit()">
-        <div class="contact-page__form-group">
-          <base-input
-            v-model="formValues.firstName"
-            v-bind="{ invalid: v$.firstName.$error }"
-            autofocus
-            clearable
+    <base-section class="contact-page__section">
+      <base-wrapper class="contact-page__wrapper">
+        <form class="contact-page__form" @submit.prevent="onFormSubmit()">
+          <div class="contact-page__form-group">
+            <base-input
+              v-model="formValues.firstName"
+              v-bind="{ invalid: v$.firstName.$error }"
+              clearable
+              placeholder="Required"
+              type="text"
+            >
+              {{ dictionary.firstName }}
+            </base-input>
+
+            <base-input
+              v-model="formValues.lastName"
+              v-bind="{ invalid: v$.lastName.$error }"
+              clearable
+              placeholder="Required"
+              type="text"
+            >
+              {{ dictionary.lastName }}
+            </base-input>
+          </div>
+
+          <div class="contact-page__form-group">
+            <base-input
+              v-model="formValues.phoneNumber"
+              v-bind="{ invalid: v$.phoneNumber.$error }"
+              clearable
+              placeholder="Required"
+              type="tel"
+            >
+              {{ dictionary.phone }}
+            </base-input>
+
+            <base-input
+              v-model="formValues.email"
+              v-bind="{ invalid: v$.email.$error }"
+              clearable
+              placeholder="Required"
+              type="email"
+            >
+              {{ dictionary.email }}
+            </base-input>
+          </div>
+
+          <base-select
+            v-model="formValues.subject"
+            v-bind="{
+              invalid: v$.subject.$error,
+              items: dictionary.contactFormSelectValues,
+            }"
             placeholder="Required"
-            type="text"
           >
-            {{ dictionary.firstName }}
-          </base-input>
+            {{ dictionary.subject }}
+          </base-select>
 
-          <base-input
-            v-model="formValues.lastName"
-            v-bind="{ invalid: v$.lastName.$error }"
-            clearable
+          <base-textarea
+            v-model="formValues.message"
+            v-bind="{ invalid: v$.message.$error }"
             placeholder="Required"
-            type="text"
+            autogrow
           >
-            {{ dictionary.lastName }}
-          </base-input>
-        </div>
+            {{ dictionary.message }}
+          </base-textarea>
 
-        <div class="contact-page__form-group">
-          <base-input
-            v-model="formValues.phoneNumber"
-            v-bind="{ invalid: v$.phoneNumber.$error }"
-            clearable
-            placeholder="Required"
-            type="tel"
+          <base-checkbox
+            v-model="formValues.consent"
+            v-bind="{
+              invalid: v$.consent.$error,
+              value: dictionary.consent,
+            }"
           >
-            {{ dictionary.phone }}
-          </base-input>
+            {{ dictionary.consent }}*
+          </base-checkbox>
 
-          <base-input
-            v-model="formValues.email"
-            v-bind="{ invalid: v$.email.$error }"
-            clearable
-            placeholder="Required"
-            type="email"
-          >
-            {{ dictionary.email }}
-          </base-input>
-        </div>
-
-        <base-select
-          v-model="formValues.subject"
-          v-bind="{
-            invalid: v$.subject.$error,
-            items: dictionary.contactFormSelectValues,
-          }"
-          placeholder="Required"
-        >
-          {{ dictionary.subject }}
-        </base-select>
-
-        <base-textarea
-          v-model="formValues.message"
-          v-bind="{ invalid: v$.message.$error }"
-          placeholder="Required"
-          autogrow
-        >
-          {{ dictionary.message }}
-        </base-textarea>
-
-        <base-checkbox
-          v-model="formValues.consent"
-          v-bind="{
-            invalid: v$.consent.$error,
-            value: dictionary.consent,
-          }"
-        >
-          {{ dictionary.consent }}*
-        </base-checkbox>
-
-        <base-button class="contact-page__form-button" type="submit">
-          {{ dictionary.submit }}
-        </base-button>
-      </form>
-    </base-wrapper>
-  </base-section>
+          <base-button class="contact-page__form-button" type="submit">
+            {{ dictionary.submit }}
+          </base-button>
+        </form>
+      </base-wrapper>
+    </base-section>
+  </article>
 </template>
 
 <script lang="ts" setup>
 import { computed, reactive } from 'vue';
-import { useStore, Getter, Action } from '../store';
+import { useStore } from '../store';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required } from '@vuelidate/validators';
-import { MovieItem } from '../interfaces';
-import { randomNumber } from '../helpers/use-random-number';
-import { dictionary } from '../config/dictionary.config';
+import { getRandomNumber } from '../helpers';
+import { dictionary } from '../config';
 
 const store = useStore();
 
-const moviesList = computed<Array<MovieItem>>(
-  () => store.getters[Getter.GET_MOVIES_LIST]
-);
+const moviesList = computed(() => store.getMoviesList);
 
 const moviePoster = computed(() => {
-  return moviesList.value[randomNumber(0, moviesList.value.length - 1)];
+  return moviesList.value[getRandomNumber(0, moviesList.value.length - 1)];
 });
 
 const initialState = {
@@ -122,7 +120,7 @@ const initialState = {
   email: '',
   subject: '',
   message: '',
-  consent: '',
+  consent: [],
 };
 
 const formValues = reactive({ ...initialState });
@@ -142,14 +140,14 @@ const v$ = useVuelidate(formValidations, formValues, { $lazy: true });
 function onFormSubmit() {
   v$.value.$validate().then((isValid) => {
     if (isValid) {
-      store.dispatch(Action.SHOW_ALERT, {
+      store.showAlert({
         message: dictionary.formHasBeenSent,
         type: 'success',
       });
 
       resetForm();
     } else {
-      store.dispatch(Action.SHOW_ALERT, {
+      store.showAlert({
         message: dictionary.formRequiredFields,
         type: 'error',
       });

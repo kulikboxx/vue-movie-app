@@ -18,10 +18,6 @@ export enum RouteName {
 }
 
 export const useService = {
-  getMovies(page: number) {
-    return axiosInstance.get(`movie/popular?api_key=${API_KEY}&page=${page}`);
-  },
-  getTvShows(page: number) {
-    return axiosInstance.get(`tv/popular?api_key=${API_KEY}&page=${page}`);
-  },
+  getMovies: (page: number) => `movie/popular?api_key=${API_KEY}&page=${page}`,
+  getTvShows: (page: number) => `tv/popular?api_key=${API_KEY}&page=${page}`,
 };

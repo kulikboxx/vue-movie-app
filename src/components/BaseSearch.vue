@@ -55,9 +55,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore, Getter } from '../store';
+import { useStore } from '../store';
 import { MovieItem, TVShowItem } from '../interfaces';
-import { dictionary } from '../config/dictionary.config';
+import { dictionary } from '../config';
 
 const router = useRouter();
 const store = useStore();
@@ -67,9 +67,9 @@ const baseSearchListItemRef = ref<Array<HTMLLIElement>>([]);
 const dialogVisibility = ref(false);
 const searchedValue = ref('');
 
-const searchList = computed<Array<MovieItem | TVShowItem>>(() => {
-  const moviesList = store.getters[Getter.GET_MOVIES_LIST];
-  const tvShowsList = store.getters[Getter.GET_TV_SHOWS_LIST];
+const searchList = computed(() => {
+  const moviesList = store.getMoviesList;
+  const tvShowsList = store.getTVShowsList;
 
   return [...moviesList, ...tvShowsList];
 });

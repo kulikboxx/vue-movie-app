@@ -1,35 +1,138 @@
 <template>
-  <base-poster
-    v-bind="{
-      alt: topMoviePoster.title,
-      src: topMoviePoster.backdrop_lg,
-    }"
-  >
-    <base-heading type="h1">{{ topMoviePoster.title }}</base-heading>
-    <base-paragraph>{{ topMoviePoster.overview }}</base-paragraph>
-
-    <base-button
-      color="danger"
-      @click="
-        $router.push({ name: 'movie', params: { id: topMoviePoster.id } })
-      "
+  <article class="home-page">
+    <base-poster
+      v-bind="{
+        alt: topMoviePoster.title,
+        src: topMoviePoster.backdrop_lg,
+      }"
     >
-      {{ dictionary.details }}
-    </base-button>
-  </base-poster>
+      <base-heading type="h1">{{ topMoviePoster.title }}</base-heading>
+      <base-paragraph>{{ topMoviePoster.overview }}</base-paragraph>
 
-  <base-section class="home-page__section">
-    <base-wrapper>
+      <base-button
+        color="danger"
+        @click="
+          $router.push({ name: 'movie', params: { id: topMoviePoster.id } })
+        "
+      >
+        {{ dictionary.details }}
+      </base-button>
+    </base-poster>
+
+    <base-section class="home-page__section">
+      <base-wrapper>
+        <base-caption class="home-page__caption">
+          {{ dictionary.popularMovies }} ({{ slicedMoviesList.length }})
+
+          <template #baseCaptionSuffix>
+            <base-button
+              color="inherit"
+              text
+              @click="$router.push({ name: 'movies' })"
+            >
+              ({{ moviesList.length }})
+              {{ dictionary.showAll }}
+
+              <base-icon name="arrow-right" />
+            </base-button>
+          </template>
+        </base-caption>
+
+        <base-carousel
+          v-bind="{
+            breakpoints,
+            items: slicedMoviesList,
+            itemsPerView: 5,
+            spaceBetween: 10,
+          }"
+          class="home-page__carousel"
+        >
+          <template #baseCarouselItem="{ item }">
+            <base-card v-bind="{ alt: item.title, src: item.backdrop_md }">
+              <template #baseCardTop>
+                <base-badge color="danger">
+                  {{ transformText(item.original_language) }}
+                </base-badge>
+
+                <base-badge color="success">
+                  {{ item.vote_average }}
+                </base-badge>
+              </template>
+
+              <base-heading type="h3">
+                {{ sliceText(item.title, 22, false) }}
+              </base-heading>
+
+              <base-badge color="secondary">
+                {{ dictionary.release }}: {{ item.release_date }}
+              </base-badge>
+
+              <base-paragraph size="sm">
+                {{ sliceText(item.overview, 150, true) }}
+              </base-paragraph>
+
+              <template #baseCardActions>
+                <base-button
+                  color="primary"
+                  @click="
+                    $router.push({ name: 'movie', params: { id: item.id } })
+                  "
+                >
+                  {{ dictionary.details }}
+                </base-button>
+              </template>
+            </base-card>
+          </template>
+
+          <template #baseCarouselPrev>
+            <base-button color="secondary">
+              <base-icon name="arrow-left" />
+            </base-button>
+          </template>
+
+          <template #baseCarouselNext>
+            <base-button color="secondary">
+              <base-icon name="arrow-right" />
+            </base-button>
+          </template>
+        </base-carousel>
+      </base-wrapper>
+    </base-section>
+
+    <base-poster
+      v-bind="{
+        alt: randomTvShowPoster.title,
+        src: randomTvShowPoster.backdrop_lg,
+      }"
+      position="center"
+    >
+      <base-heading type="h1">{{ randomTvShowPoster.title }}</base-heading>
+      <base-paragraph>{{ randomTvShowPoster.overview }}</base-paragraph>
+
+      <base-button
+        color="danger"
+        @click="
+          $router.push({
+            name: 'tv-show',
+            params: { id: randomTvShowPoster.id },
+          })
+        "
+      >
+        {{ dictionary.details }}
+      </base-button>
+    </base-poster>
+
+    <base-section class="home-page__section">
       <base-caption class="home-page__caption">
-        {{ dictionary.popularMovies }} ({{ slicedMoviesList.length }})
+        {{ dictionary.popularTvShows }} ({{ slicedTvShowsList.length }})
 
         <template #baseCaptionSuffix>
           <base-button
             color="inherit"
             text
-            @click="$router.push({ name: 'movies' })"
+            @click="$router.push({ name: 'tv-shows' })"
           >
-            ({{ moviesList.length }})
+            ({{ tvShowsList.length }})
             {{ dictionary.showAll }}
 
             <base-icon name="arrow-right" />
@@ -40,7 +143,7 @@
       <base-carousel
         v-bind="{
           breakpoints,
-          items: slicedMoviesList,
+          items: slicedTvShowsList,
           itemsPerView: 5,
           spaceBetween: 10,
         }"
@@ -59,7 +162,7 @@
             </template>
 
             <base-heading type="h3">
-              {{ sliceText(item.title, 22, false) }}
+              {{ sliceText(item.title, 20, false) }}
             </base-heading>
 
             <base-badge color="secondary">
@@ -67,14 +170,14 @@
             </base-badge>
 
             <base-paragraph size="sm">
-              {{ sliceText(item.overview, 150, true) }}
+              {{ sliceText(item.overview, 120, true) }}
             </base-paragraph>
 
             <template #baseCardActions>
               <base-button
                 color="primary"
                 @click="
-                  $router.push({ name: 'movie', params: { id: item.id } })
+                  $router.push({ name: 'tv-show', params: { id: item.id } })
                 "
               >
                 {{ dictionary.details }}
@@ -95,135 +198,35 @@
           </base-button>
         </template>
       </base-carousel>
-    </base-wrapper>
-  </base-section>
+    </base-section>
 
-  <base-poster
-    v-bind="{
-      alt: randomTvShowPoster.title,
-      src: randomTvShowPoster.backdrop_lg,
-    }"
-    position="center"
-  >
-    <base-heading type="h1">{{ randomTvShowPoster.title }}</base-heading>
-    <base-paragraph>{{ randomTvShowPoster.overview }}</base-paragraph>
-
-    <base-button
-      color="danger"
-      @click="
-        $router.push({ name: 'tv-show', params: { id: randomTvShowPoster.id } })
-      "
-    >
-      {{ dictionary.details }}
-    </base-button>
-  </base-poster>
-
-  <base-section class="home-page__section">
-    <base-caption class="home-page__caption">
-      {{ dictionary.popularTvShows }} ({{ slicedTvShowsList.length }})
-
-      <template #baseCaptionSuffix>
-        <base-button
-          color="inherit"
-          text
-          @click="$router.push({ name: 'tv-shows' })"
-        >
-          ({{ tvShowsList.length }})
-          {{ dictionary.showAll }}
-
-          <base-icon name="arrow-right" />
-        </base-button>
-      </template>
-    </base-caption>
-
-    <base-carousel
+    <base-poster
       v-bind="{
-        breakpoints,
-        items: slicedTvShowsList,
-        itemsPerView: 5,
-        spaceBetween: 10,
+        alt: bottomMoviePoster.title,
+        src: bottomMoviePoster.backdrop_lg,
       }"
-      class="home-page__carousel"
+      position="right"
     >
-      <template #baseCarouselItem="{ item }">
-        <base-card v-bind="{ alt: item.title, src: item.backdrop_md }">
-          <template #baseCardTop>
-            <base-badge color="danger">
-              {{ transformText(item.original_language) }}
-            </base-badge>
+      <base-heading type="h1">{{ bottomMoviePoster.title }}</base-heading>
+      <base-paragraph>{{ bottomMoviePoster.overview }}</base-paragraph>
 
-            <base-badge color="success">
-              {{ item.vote_average }}
-            </base-badge>
-          </template>
-
-          <base-heading type="h3">
-            {{ sliceText(item.title, 20, false) }}
-          </base-heading>
-
-          <base-badge color="secondary">
-            {{ dictionary.release }}: {{ item.first_air_date }}
-          </base-badge>
-
-          <base-paragraph size="sm">
-            {{ sliceText(item.overview, 120, true) }}
-          </base-paragraph>
-
-          <template #baseCardActions>
-            <base-button
-              color="primary"
-              @click="
-                $router.push({ name: 'tv-show', params: { id: item.id } })
-              "
-            >
-              {{ dictionary.details }}
-            </base-button>
-          </template>
-        </base-card>
-      </template>
-
-      <template #baseCarouselPrev>
-        <base-button color="secondary">
-          <base-icon name="arrow-left" />
-        </base-button>
-      </template>
-
-      <template #baseCarouselNext>
-        <base-button color="secondary">
-          <base-icon name="arrow-right" />
-        </base-button>
-      </template>
-    </base-carousel>
-  </base-section>
-
-  <base-poster
-    v-bind="{
-      alt: bottomMoviePoster.title,
-      src: bottomMoviePoster.backdrop_lg,
-    }"
-    position="right"
-  >
-    <base-heading type="h1">{{ bottomMoviePoster.title }}</base-heading>
-    <base-paragraph>{{ bottomMoviePoster.overview }}</base-paragraph>
-
-    <base-button
-      color="danger"
-      @click="
-        $router.push({ name: 'movie', params: { id: bottomMoviePoster.id } })
-      "
-    >
-      {{ dictionary.details }}
-    </base-button>
-  </base-poster>
+      <base-button
+        color="danger"
+        @click="
+          $router.push({ name: 'movie', params: { id: bottomMoviePoster.id } })
+        "
+      >
+        {{ dictionary.details }}
+      </base-button>
+    </base-poster>
+  </article>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore, Getter } from '../store';
-import { MovieItem, TVShowItem } from '../interfaces';
-import { randomNumber } from '../helpers/use-random-number';
-import { transformText, sliceText } from '../helpers/use-text';
-import { dictionary } from '../config/dictionary.config';
+import { useStore } from '../store';
+import { getRandomNumber, transformText, sliceText } from '../helpers';
+import { dictionary } from '../config';
 
 const store = useStore();
 
@@ -235,27 +238,22 @@ const breakpoints = {
   1200: { itemsPerView: 5 },
 };
 
-const moviesList = computed<Array<MovieItem>>(
-  () => store.getters[Getter.GET_MOVIES_LIST]
-);
-
-const tvShowsList = computed<Array<TVShowItem>>(
-  () => store.getters[Getter.GET_TV_SHOWS_LIST]
-);
+const moviesList = computed(() => store.getMoviesList);
+const tvShowsList = computed(() => store.getTVShowsList);
 
 const slicedMoviesList = computed(() => moviesList.value.slice(0, 20));
 const slicedTvShowsList = computed(() => tvShowsList.value.slice(0, 20));
 
 const topMoviePoster = computed(
-  () => moviesList.value[randomNumber(0, moviesList.value.length - 1)]
+  () => moviesList.value[getRandomNumber(0, moviesList.value.length - 1)]
 );
 
 const bottomMoviePoster = computed(
-  () => moviesList.value[randomNumber(0, moviesList.value.length - 1)]
+  () => moviesList.value[getRandomNumber(0, moviesList.value.length - 1)]
 );
 
 const randomTvShowPoster = computed(
-  () => tvShowsList.value[randomNumber(0, tvShowsList.value.length - 1)]
+  () => tvShowsList.value[getRandomNumber(0, tvShowsList.value.length - 1)]
 );
 </script>
 

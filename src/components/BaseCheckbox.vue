@@ -53,7 +53,7 @@ function handleCheckboxChange(e: Event) {
   &__label {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
@@ -89,11 +89,12 @@ function handleCheckboxChange(e: Event) {
       background-color: $gray;
       border: 0.2rem solid transparent;
       border-radius: 0.4rem;
-      transition: transform 0.3s;
+      transition: background-color 0.3s, transform 0.3s;
       transform: scale(0);
     }
 
     &:checked::after {
+      background-color: $primary;
       transform: scale(0.55);
     }
 
