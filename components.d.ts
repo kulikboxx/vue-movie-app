@@ -8,7 +8,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BaseAlert: typeof import('./src/components/BaseAlert.vue')['default']
-    BaseAnimation: typeof import('./src/components/BaseAnimation.vue')['default']
     BaseBadge: typeof import('./src/components/BaseBadge.vue')['default']
     BaseButton: typeof import('./src/components/BaseButton.vue')['default']
     BaseCaption: typeof import('./src/components/BaseCaption.vue')['default']
@@ -18,6 +17,7 @@ declare module '@vue/runtime-core' {
     BaseCircularLoader: typeof import('./src/components/BaseCircularLoader.vue')['default']
     BaseDialog: typeof import('./src/components/BaseDialog.vue')['default']
     BaseDivider: typeof import('./src/components/BaseDivider.vue')['default']
+    BaseFilter: typeof import('./src/components/BaseFilter.vue')['default']
     BaseHeading: typeof import('./src/components/BaseHeading.vue')['default']
     BaseIcon: typeof import('./src/components/BaseIcon.vue')['default']
     BaseImage: typeof import('./src/components/BaseImage.vue')['default']
@@ -34,7 +34,6 @@ declare module '@vue/runtime-core' {
     BaseSearch: typeof import('./src/components/BaseSearch.vue')['default']
     BaseSection: typeof import('./src/components/BaseSection.vue')['default']
     BaseSelect: typeof import('./src/components/BaseSelect.vue')['default']
-    BaseSkeleton: typeof import('./src/components/BaseSkeleton.vue')['default']
     BaseTextarea: typeof import('./src/components/BaseTextarea.vue')['default']
     BaseToggle: typeof import('./src/components/BaseToggle.vue')['default']
     BaseWrapper: typeof import('./src/components/BaseWrapper.vue')['default']

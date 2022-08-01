@@ -48,7 +48,7 @@ function handleRadioChange(e: Event) {
   &__label {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     width: max-content;
     font-size: 1.4rem;
     font-weight: 400;
@@ -83,11 +83,12 @@ function handleRadioChange(e: Event) {
       inset: 0;
       background-color: $gray;
       border: 0.2rem solid transparent;
-      transition: transform 0.3s;
+      transition: background-color 0.3s, transform 0.3s;
       transform: scale(0);
     }
 
     &:checked::after {
+      background-color: $primary;
       transform: scale(0.55);
     }
 

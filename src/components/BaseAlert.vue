@@ -14,11 +14,7 @@
 
       {{ alert.message }}
 
-      <base-button
-        color="inherit"
-        text
-        @click="store.dispatch(Action.HIDE_ALERT, alert.id)"
-      >
+      <base-button color="inherit" text @click="store.hideAlert(alert.id)">
         <base-icon name="close" />
       </base-button>
     </li>
@@ -27,13 +23,10 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore, Action, Getter } from '../store';
-import { AlertItem } from '../interfaces';
+import { useStore } from '../store';
 
 const store = useStore();
-const alerts = computed<Array<AlertItem>>(
-  () => store.getters[Getter.GET_ALERTS]
-);
+const alerts = computed(() => store.getAlerts);
 </script>
 
 <style lang="scss" scoped>
@@ -77,7 +70,7 @@ const alerts = computed<Array<AlertItem>>(
   &-enter-from,
   &-leave-to {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(5px);
   }
 
   &-leave-active {

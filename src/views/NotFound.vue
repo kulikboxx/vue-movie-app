@@ -1,29 +1,29 @@
 <template>
-  <base-poster
-    v-bind="{
-      alt: moviePoster.title,
-      src: moviePoster.backdrop_lg,
-    }"
-    position="center"
-  >
-    <base-heading type="h1">{{ dictionary.pageDoesNotExist }}</base-heading>
-  </base-poster>
+  <article class="not-found-page">
+    <base-poster
+      v-bind="{
+        alt: moviePoster.title,
+        src: moviePoster.backdrop_lg,
+      }"
+      position="center"
+    >
+      <base-heading type="h1">{{ dictionary.pageDoesNotExist }}</base-heading>
+    </base-poster>
+  </article>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore, Getter } from '../store';
+import { useStore } from '../store';
 import { MovieItem } from '../interfaces';
-import { randomNumber } from '../helpers/use-random-number';
-import { dictionary } from '../config/dictionary.config';
+import { getRandomNumber } from '../helpers';
+import { dictionary } from '../config';
 
 const store = useStore();
 
-const moviesList = computed<Array<MovieItem>>(
-  () => store.getters[Getter.GET_MOVIES_LIST]
-);
+const moviesList = computed(() => store.getMoviesList);
 
 const moviePoster = computed(
-  () => moviesList.value[randomNumber(0, moviesList.value.length - 1)]
+  () => moviesList.value[getRandomNumber(0, moviesList.value.length - 1)]
 );
 </script>

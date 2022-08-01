@@ -1,9 +1,9 @@
 export interface MovieItem {
   id: number;
-  adult: boolean;
   backdrop_lg: string;
   backdrop_md: string;
   backdrop_path: string;
+  first_air_date: string;
   name: string;
   original_language: string;
   overview: string;

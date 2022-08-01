@@ -19,7 +19,6 @@
       <input
         v-bind="{
           ...$attrs,
-          autofocus,
           disabled,
           placeholder,
           readonly,
@@ -55,7 +54,6 @@ import { ref, watch } from 'vue';
 type InputType = 'text' | 'tel' | 'email';
 
 interface Props {
-  autofocus?: boolean;
   clearable?: boolean;
   disabled?: boolean;
   invalid?: boolean;
