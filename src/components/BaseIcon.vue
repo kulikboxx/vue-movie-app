@@ -1,12 +1,11 @@
 <template>
-  <span
-    :class="['base-icon', { 'base-icon--rotation': rotation }]"
-    v-html="svgData"
-  ></span>
+  <span :class="['base-icon', { 'base-icon--rotation': rotation }]">
+    <component :is="icon" />
+  </span>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 interface Props {
   degrees?: string;
@@ -15,18 +14,11 @@ interface Props {
   size?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  size: '20px',
-});
+const props = withDefaults(defineProps<Props>(), { size: '20px' });
 
-const svgData = ref('');
-import(`../assets/icons/${props.name}.svg?raw`).then((data) => {
-  try {
-    svgData.value = data.default;
-  } catch (e) {
-    console.log(e);
-  }
-});
+const icon = computed(() =>
+  defineAsyncComponent(() => import(`../assets/icons/${props.name}.vue`))
+);
 </script>
 
 <style lang="scss">
