@@ -51,6 +51,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   breakpoints: () => ({ 200: { itemsPerView: 1 } }),
+  items: () => [],
   itemsPerView: 1,
   loopDuration: 6000,
   spaceBetween: 0,
@@ -60,7 +61,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const baseCarouselRef = ref<HTMLDivElement>();
 const isCarouselDisabled = ref(false);
-const loopTimer = ref<NodeJS.Timer>();
+const loopTimer = ref<number>();
 
 const carousel = reactive({
   currentItem: 0,
@@ -217,6 +218,7 @@ function onKeyDown(e: KeyboardEvent) {
   if (e.key === 'ArrowLeft') swipeItem(1);
   if (e.key === 'ArrowRight') swipeItem(-1);
 }
+
 function loopCarousel() {
   swipeItem(-1);
 }

@@ -1,87 +1,86 @@
 import { defineStore } from 'pinia';
-import { useRouter } from 'vue-router';
-import { AlertItem, MovieItem, TVShowItem } from '../interfaces';
-import { alertConfig } from '../config/alerts.config';
+import { AlertItem, MovieItem, TVShowItem, FetchOptions } from '../interfaces';
 import {
-  axiosInstance,
-  RouteName,
-  totalPages,
-  useService,
+  alertConfig,
+  endpointApi,
   API_URL_IMAGE_MD,
   API_URL_IMAGE_LG,
-} from '../service/use-service';
-
-const router = useRouter();
+} from '../config';
 
 type ItemType = MovieItem | TVShowItem;
 
 interface State {
   alerts: Array<AlertItem>;
-  currentPage: number;
-  error: boolean;
+  initialFetching: boolean;
   fetching: boolean;
   moviesList: Array<MovieItem>;
-  requestPage: number;
   tvShowsList: Array<TVShowItem>;
+  totalPages: number;
 }
 
 export const useStore = defineStore('main', {
   state: (): State => ({
     alerts: [],
-    currentPage: 0,
-    error: false,
+    initialFetching: true,
     fetching: false,
     moviesList: [],
-    requestPage: 1,
     tvShowsList: [],
+    totalPages: 10,
   }),
   getters: {
     getAlerts: (state) => state.alerts.slice(-alertConfig.maxLength),
-    getCurrentPage: (state) => state.currentPage,
-    getError: (state) => state.error,
     getFetching: (state) => state.fetching,
     getMoviesList: (state) => state.moviesList,
     getTVShowsList: (state) => state.tvShowsList,
   },
   actions: {
-    useFetch(url: string, routeName: string) {
+    showAlert(alert: AlertItem) {
+      this.alerts.push({ ...alert, id: Date.now() });
+
+      setTimeout(() => this.hideAlert(undefined), alertConfig.duration);
+    },
+    hideAlert(id: number | undefined) {
+      const index = this.getAlerts.findIndex((al: AlertItem) => al.id === id);
+
+      !id ? this.alerts.shift() : this.alerts.splice(index, 1);
+    },
+    changePage(list: Array<ItemType>, elId: number, dir: number) {
+      const index = list.findIndex((el: ItemType) => el.id === elId);
+      return list[index + dir].id;
+    },
+    async useFetch(url: string, options: FetchOptions = {}) {
+      const {
+        method = 'GET',
+        headers = { 'Content-Type': 'application/json' },
+        body,
+        responseType = 'json',
+      } = options;
+
+      const isGetMethod = method === 'GET';
       this.fetching = true;
 
-      axiosInstance
-        .get(url)
-        .then((response) => {
-          if (response.status === 200) {
-            const result = response.data.results;
+      try {
+        const response = await fetch(url, {
+          method,
+          headers,
+          body: isGetMethod ? null : body,
+        });
 
-            switch (routeName) {
-              case RouteName.Movie:
-                this.updateMoviesList(this.filterData(result, routeName));
-                break;
-              case RouteName.TVShow:
-                this.updateTVShowsList(this.filterData(result, routeName));
-                break;
-              default:
-                throw new Error('Unknown mutation type!');
-            }
-          }
-        })
-        .catch((error) => {
-          this.showAlert({
-            message: error.message,
-            type: 'error',
-          });
+        if (!response.ok) {
+          throw new Error(response.status + ': ' + response.statusText);
+        }
 
-          this.error = true;
-        })
-        .finally(() => setTimeout(() => (this.fetching = false), 3000));
+        return await response[responseType]();
+      } catch (error) {
+        this.showAlert({
+          message: (error as Error).message,
+          type: 'error',
+        });
+      } finally {
+        this.fetching = false;
+      }
     },
-    updateMoviesList(list: MovieItem[]) {
-      this.moviesList = list;
-    },
-    updateTVShowsList(list: TVShowItem[]) {
-      this.tvShowsList = list;
-    },
-    filterData(data: ItemType[], route: string) {
+    sanitizeData(data: ItemType[]) {
       return data.filter((item: ItemType) => {
         item.title = item.name || item.title;
         item.backdrop_md = API_URL_IMAGE_MD + item.backdrop_path;
@@ -89,7 +88,6 @@ export const useStore = defineStore('main', {
         item.poster_md = API_URL_IMAGE_MD + item.poster_path;
         item.poster_lg = API_URL_IMAGE_LG + item.poster_path;
         item.release_date = item.first_air_date || item.release_date;
-        item.route = route;
 
         return (
           item.title.length &&
@@ -99,28 +97,26 @@ export const useStore = defineStore('main', {
         );
       });
     },
-    hideAlert(id: number | undefined) {
-      const index = this.getAlerts.findIndex((al: AlertItem) => al.id === id);
-
-      !id ? this.alerts.shift() : this.alerts.splice(index, 1);
-    },
-    changePage(list: Array<ItemType>, name: string, elId: number, dir: number) {
-      const index = list.findIndex((el: ItemType) => el.id === elId);
-
-      router.push({ name, params: { id: list[index + dir].id } });
-    },
-    setCurrentPage(page: number) {
-      this.currentPage = page;
-    },
-    showAlert(alert: AlertItem) {
-      this.alerts.push({ ...alert, id: Date.now() });
-
-      setTimeout(() => this.hideAlert(undefined), alertConfig.duration);
-    },
     fetchData() {
-      for (let i = 1; i <= totalPages; i++) {
-        this.useFetch(useService.getMovies(1), RouteName.Movie);
-        this.useFetch(useService.getTvShows(1), RouteName.TVShow);
+      for (let i = 1; i <= this.totalPages; i++) {
+        Promise.all([
+          this.useFetch(endpointApi.movies(i)),
+          this.useFetch(endpointApi.tvShows(i)),
+        ])
+          .then((data) => {
+            this.moviesList = [
+              ...this.moviesList,
+              ...this.sanitizeData(data[0].results),
+            ];
+
+            this.tvShowsList = [
+              ...this.tvShowsList,
+              ...this.sanitizeData(data[1].results),
+            ];
+          })
+          .finally(() =>
+            setTimeout(() => (this.initialFetching = false), 2000)
+          );
       }
     },
   },

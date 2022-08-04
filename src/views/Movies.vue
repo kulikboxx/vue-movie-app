@@ -4,69 +4,56 @@
       <base-wrapper>
         <base-caption class="movies-page__caption">
           <template #baseCaptionHeadingH1>
-            {{ dictionary.popularMovies }} ({{ listAfterSorting.length }})
+            {{ dictionary.popularMovies }} ({{ moviesList?.length }})
           </template>
         </base-caption>
 
-        <div class="movies-page__container">
-          <base-filter
-            :items="movieList"
-            @filter="(list: Array<MovieItem>) => (sortedList = list)"
-          />
-
-          <layout-grid-cards>
-            <base-card
-              v-for="item in paginatedList"
-              :key="item.id"
-              v-bind="{ alt: item.title, src: item.backdrop_md }"
-            >
-              <template #baseCardTop>
-                <base-badge color="danger">
-                  {{ transformText(item.original_language) }}
-                </base-badge>
-
-                <base-badge color="success">
-                  {{ item.vote_average }}
-                </base-badge>
-              </template>
-
-              <base-heading type="h3">
-                {{ sliceText(item.title, 20, false) }}
-              </base-heading>
-
-              <base-badge color="secondary">
-                {{ dictionary.release }}: {{ item.release_date }}
+        <layout-grid-cards>
+          <base-card
+            v-for="(item, index) in paginatedList"
+            :key="index"
+            v-bind="{ alt: item?.title, src: item?.backdrop_md }"
+          >
+            <template #baseCardTop>
+              <base-badge color="danger">
+                {{ transformText(item?.original_language) }}
               </base-badge>
 
-              <base-paragraph size="sm">
-                {{ sliceText(item.overview, 150, true) }}
-              </base-paragraph>
+              <base-badge color="success">
+                {{ item?.vote_average }}
+              </base-badge>
+            </template>
 
-              <template #baseCardActions>
-                <base-button
-                  color="primary"
-                  @click="
-                    $router.push({
-                      name: item.route,
-                      params: { id: item.id },
-                    })
-                  "
-                >
-                  {{ dictionary.details }}
-                </base-button>
-              </template>
-            </base-card>
-          </layout-grid-cards>
+            <base-heading type="h3">
+              {{ sliceText(item?.title, 20, false) }}
+            </base-heading>
 
-          <base-pagination
-            v-bind="{
-              items: listAfterSorting,
-              visibleItems: 16,
-            }"
-            class="movies-page__pagination"
-            @change="(list: Array<MovieItem>) => (paginatedList = list)"
-          />
-        </div>
+            <base-badge color="secondary">
+              {{ dictionary.release }}: {{ item?.release_date }}
+            </base-badge>
+
+            <base-paragraph size="sm">
+              {{ sliceText(item?.overview, 150, true) }}
+            </base-paragraph>
+
+            <template #baseCardActions>
+              <base-button
+                color="primary"
+                @click="
+                  $router.push({ name: 'movie', params: { id: item?.id } })
+                "
+              >
+                {{ dictionary.details }}
+              </base-button>
+            </template>
+          </base-card>
+        </layout-grid-cards>
+
+        <base-pagination
+          v-bind="{ currentPage, totalPages }"
+          class="movies-page__pagination"
+          @change="(page: number) => (currentPage = page)"
+        />
       </base-wrapper>
     </base-section>
   </article>
@@ -75,23 +62,30 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useStore } from '../store';
-import { MovieItem } from '../interfaces';
 import { transformText, sliceText } from '../helpers';
+import { MovieItem } from '../interfaces';
 import { dictionary } from '../config';
 
 import LayoutGridCards from '../layout/LayoutGridCards.vue';
 
 const store = useStore();
 
-const movieList = computed(() => store.getMoviesList);
+const currentPage = ref(0);
+const visibleItems = 12;
 
-const sortedList = ref<Array<MovieItem>>();
+const moviesList = computed(() => store.getMoviesList);
 
-const listAfterSorting = computed<Array<MovieItem>>(() =>
-  sortedList.value?.length ? sortedList.value : movieList.value
+const totalPages = computed(() =>
+  Math.ceil(moviesList.value.length / visibleItems)
 );
 
-const paginatedList = ref<Array<MovieItem>>();
+const paginatedList = computed(() =>
+  moviesList.value.filter(
+    (item: MovieItem, i: number) =>
+      i >= currentPage.value * visibleItems &&
+      i < currentPage.value * visibleItems + visibleItems
+  )
+);
 </script>
 
 <style lang="scss">
@@ -100,26 +94,8 @@ const paginatedList = ref<Array<MovieItem>>();
     margin-bottom: 1em;
   }
 
-  &__container {
-    display: grid;
-    gap: 1.2rem;
-  }
-
   &__pagination {
     margin-top: 0.8125em;
-  }
-}
-
-@media (min-width: 1200px) {
-  .movies-page {
-    &__container {
-      grid-template-columns: min-content 1fr;
-      column-gap: 2rem;
-    }
-
-    &__pagination {
-      grid-column: 2/-1;
-    }
   }
 }
 </style>

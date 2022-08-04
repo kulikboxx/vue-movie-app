@@ -41,7 +41,6 @@ const alerts = computed(() => store.getAlerts);
   max-width: 500px;
   height: max-content;
   list-style: none;
-  user-select: none;
   z-index: 20000;
 
   &__item {

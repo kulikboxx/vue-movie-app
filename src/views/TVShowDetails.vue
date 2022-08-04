@@ -68,7 +68,12 @@
               v-if="pageNumber > 0"
               color="secondary"
               @click="
-                store.changePage(tvShowsList, 'tv-show', +route.params.id, -1)
+                $router.push({
+                  name: 'tv-show',
+                  params: {
+                    id: store.changePage(tvShowsList, +route.params.id, -1),
+                  },
+                })
               "
             >
               <base-icon
@@ -84,7 +89,12 @@
               v-if="pageNumber < tvShowsList.length - 1"
               color="secondary"
               @click="
-                store.changePage(tvShowsList, 'tv-show', +route.params.id, 1)
+                $router.push({
+                  name: 'tv-show',
+                  params: {
+                    id: store.changePage(tvShowsList, +route.params.id, 1),
+                  },
+                })
               "
             >
               <base-icon

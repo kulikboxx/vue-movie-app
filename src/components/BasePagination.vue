@@ -37,36 +37,31 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, watch } from 'vue';
-import { useStore } from '../store';
-import { MovieItem, TVShowItem } from '../interfaces';
-
-const store = useStore();
-
-type ItemType = MovieItem | TVShowItem;
+import { computed } from 'vue';
 
 interface Props {
-  items: Array<ItemType>;
-  visibleItems: number;
+  currentPage: number;
+  totalPages: number;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  currentPage: 0,
+  totalPages: 1,
+});
+
 const emit = defineEmits(['change']);
 
-const totalPages = computed(() =>
-  Math.ceil(props.items.length / props.visibleItems)
-);
-const currentPage = computed(() => store.getCurrentPage);
-const pagesArray = computed(() => Array.from(Array(totalPages.value).keys()));
+const currentPage = computed(() => props.currentPage);
+const pagesArray = computed(() => Array.from(Array(props.totalPages).keys()));
 
 const transformedPages = computed(() => {
   const current = currentPage.value;
   const dots = '...';
-  const lastPage = totalPages.value - 1;
+  const lastPage = props.totalPages - 1;
   const limit = 5;
   const threshold = 2;
 
-  if (totalPages.value < 7) return pagesArray.value;
+  if (props.totalPages < 7) return pagesArray.value;
 
   if (current <= threshold) {
     return [...filterPages(0, limit - 1), dots, lastPage];
@@ -85,27 +80,9 @@ function typeofValue(value: string | number) {
   return typeof value === 'string';
 }
 
-function paginatePages(page: number) {
-  const limit = props.visibleItems;
-
-  return props.items.filter(
-    (item: ItemType, i: number) => i >= page * limit && i < page * limit + limit
-  );
-}
-
 function setPage(page: number) {
-  store.setCurrentPage(page);
-  emit('change', paginatePages(page));
+  emit('change', page);
 }
-
-watch(
-  () => props.items,
-  () => {
-    setPage(currentPage.value);
-  }
-);
-
-onMounted(() => setPage(currentPage.value));
 </script>
 
 <style lang="scss" scoped>
