@@ -36,10 +36,10 @@
               class="base-search__list-item"
               ref="baseSearchListItemRef"
               tabindex="0"
-              @click="goToItem(item.id, item.route)"
+              @click="goToDetailsPage(item.id)"
               @keydown.up="setFocus(index - 1)"
               @keydown.down="setFocus(index + 1)"
-              @keydown.enter="goToItem(item.id, item.route)"
+              @keydown.enter="goToDetailsPage(item.id)"
             >
               <base-heading type="h4">
                 {{ item.title }}
@@ -66,13 +66,10 @@ const baseSearchInputRef = ref<HTMLInputElement>();
 const baseSearchListItemRef = ref<Array<HTMLLIElement>>([]);
 const dialogVisibility = ref(false);
 const searchedValue = ref('');
+const moviesList = computed(() => store.getMoviesList);
+const tvShowsList = computed(() => store.getTVShowsList);
 
-const searchList = computed(() => {
-  const moviesList = store.getMoviesList;
-  const tvShowsList = store.getTVShowsList;
-
-  return [...moviesList, ...tvShowsList];
-});
+const searchList = computed(() => [...moviesList.value, ...tvShowsList.value]);
 
 const computedList = computed(() => {
   const value = searchedValue.value;
@@ -88,8 +85,9 @@ function setFocus(index: number) {
   baseSearchListItemRef.value[index]?.focus();
 }
 
-function goToItem(id: number, route: string) {
-  router.push({ name: route, params: { id } });
+function goToDetailsPage(id: number) {
+  const index = moviesList.value.findIndex((el) => el.id === id);
+  router.push({ name: index !== -1 ? 'movie' : 'tv-show', params: { id } });
   toggleDialogVisibility(false);
 }
 

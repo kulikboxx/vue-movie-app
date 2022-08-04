@@ -5,24 +5,12 @@
       'base-button',
       `base-button--${color}`,
       {
-        'base-button--circle': circle,
         'base-button--square': square,
         'base-button--text': text,
       },
     ]"
   >
-    <base-circular-loader v-if="loading" :size="loaderSize" />
-
-    <a
-      v-else-if="$slots.baseButtonLink"
-      v-bind="{ href }"
-      target="_blank"
-      class="base-button__link"
-    >
-      <slot name="baseButtonLink" />
-    </a>
-
-    <slot v-else />
+    <slot />
   </button>
 </template>
 
@@ -31,13 +19,8 @@ type ButtonColor = 'primary' | 'secondary' | 'danger' | 'inherit';
 type ButtonType = 'button' | 'submit';
 
 interface Props {
-  circle?: boolean;
   color?: ButtonColor;
   disabled?: boolean;
-  href?: string;
-  link?: string;
-  loaderSize?: string;
-  loading?: boolean;
   size?: string;
   square?: boolean;
   text?: boolean;
@@ -73,14 +56,7 @@ withDefaults(defineProps<Props>(), {
     @include danger-element-palette;
   }
 
-  &--circle {
-    padding: 0.375em;
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-  }
-
-  &--inherit,
-  &__link {
+  &--inherit {
     color: inherit;
   }
 

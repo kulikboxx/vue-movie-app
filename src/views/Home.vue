@@ -2,17 +2,17 @@
   <article class="home-page">
     <base-poster
       v-bind="{
-        alt: topMoviePoster.title,
-        src: topMoviePoster.backdrop_lg,
+        alt: topMoviePoster?.title,
+        src: topMoviePoster?.backdrop_lg,
       }"
     >
-      <base-heading type="h1">{{ topMoviePoster.title }}</base-heading>
-      <base-paragraph>{{ topMoviePoster.overview }}</base-paragraph>
+      <base-heading type="h1">{{ topMoviePoster?.title }}</base-heading>
+      <base-paragraph>{{ topMoviePoster?.overview }}</base-paragraph>
 
       <base-button
         color="danger"
         @click="
-          $router.push({ name: 'movie', params: { id: topMoviePoster.id } })
+          $router.push({ name: 'movie', params: { id: topMoviePoster?.id } })
         "
       >
         {{ dictionary.details }}
@@ -22,7 +22,7 @@
     <base-section class="home-page__section">
       <base-wrapper>
         <base-caption class="home-page__caption">
-          {{ dictionary.popularMovies }} ({{ slicedMoviesList.length }})
+          {{ dictionary.popularMovies }} ({{ slicedMoviesList?.length }})
 
           <template #baseCaptionSuffix>
             <base-button
@@ -30,7 +30,7 @@
               text
               @click="$router.push({ name: 'movies' })"
             >
-              ({{ moviesList.length }})
+              ({{ moviesList?.length }})
               {{ dictionary.showAll }}
 
               <base-icon name="arrow-right" />
@@ -48,34 +48,34 @@
           class="home-page__carousel"
         >
           <template #baseCarouselItem="{ item }">
-            <base-card v-bind="{ alt: item.title, src: item.backdrop_md }">
+            <base-card v-bind="{ alt: item?.title, src: item?.backdrop_md }">
               <template #baseCardTop>
                 <base-badge color="danger">
-                  {{ transformText(item.original_language) }}
+                  {{ transformText(item?.original_language) }}
                 </base-badge>
 
                 <base-badge color="success">
-                  {{ item.vote_average }}
+                  {{ item?.vote_average }}
                 </base-badge>
               </template>
 
               <base-heading type="h3">
-                {{ sliceText(item.title, 22, false) }}
+                {{ sliceText(item?.title, 22, false) }}
               </base-heading>
 
               <base-badge color="secondary">
-                {{ dictionary.release }}: {{ item.release_date }}
+                {{ dictionary.release }}: {{ item?.release_date }}
               </base-badge>
 
               <base-paragraph size="sm">
-                {{ sliceText(item.overview, 150, true) }}
+                {{ sliceText(item?.overview, 150, true) }}
               </base-paragraph>
 
               <template #baseCardActions>
                 <base-button
                   color="primary"
                   @click="
-                    $router.push({ name: 'movie', params: { id: item.id } })
+                    $router.push({ name: 'movie', params: { id: item?.id } })
                   "
                 >
                   {{ dictionary.details }}
@@ -101,20 +101,20 @@
 
     <base-poster
       v-bind="{
-        alt: randomTvShowPoster.title,
-        src: randomTvShowPoster.backdrop_lg,
+        alt: randomTvShowPoster?.title,
+        src: randomTvShowPoster?.backdrop_lg,
       }"
       position="center"
     >
-      <base-heading type="h1">{{ randomTvShowPoster.title }}</base-heading>
-      <base-paragraph>{{ randomTvShowPoster.overview }}</base-paragraph>
+      <base-heading type="h1">{{ randomTvShowPoster?.title }}</base-heading>
+      <base-paragraph>{{ randomTvShowPoster?.overview }}</base-paragraph>
 
       <base-button
         color="danger"
         @click="
           $router.push({
             name: 'tv-show',
-            params: { id: randomTvShowPoster.id },
+            params: { id: randomTvShowPoster?.id },
           })
         "
       >
@@ -123,97 +123,99 @@
     </base-poster>
 
     <base-section class="home-page__section">
-      <base-caption class="home-page__caption">
-        {{ dictionary.popularTvShows }} ({{ slicedTvShowsList.length }})
+      <base-wrapper>
+        <base-caption class="home-page__caption">
+          {{ dictionary.popularTvShows }} ({{ slicedTvShowsList?.length }})
 
-        <template #baseCaptionSuffix>
-          <base-button
-            color="inherit"
-            text
-            @click="$router.push({ name: 'tv-shows' })"
-          >
-            ({{ tvShowsList.length }})
-            {{ dictionary.showAll }}
+          <template #baseCaptionSuffix>
+            <base-button
+              color="inherit"
+              text
+              @click="$router.push({ name: 'tv-shows' })"
+            >
+              ({{ tvShowsList?.length }})
+              {{ dictionary.showAll }}
 
-            <base-icon name="arrow-right" />
-          </base-button>
-        </template>
-      </base-caption>
+              <base-icon name="arrow-right" />
+            </base-button>
+          </template>
+        </base-caption>
 
-      <base-carousel
-        v-bind="{
-          breakpoints,
-          items: slicedTvShowsList,
-          itemsPerView: 5,
-          spaceBetween: 10,
-        }"
-        class="home-page__carousel"
-      >
-        <template #baseCarouselItem="{ item }">
-          <base-card v-bind="{ alt: item.title, src: item.backdrop_md }">
-            <template #baseCardTop>
-              <base-badge color="danger">
-                {{ transformText(item.original_language) }}
+        <base-carousel
+          v-bind="{
+            breakpoints,
+            items: slicedTvShowsList,
+            itemsPerView: 5,
+            spaceBetween: 10,
+          }"
+          class="home-page__carousel"
+        >
+          <template #baseCarouselItem="{ item }">
+            <base-card v-bind="{ alt: item?.title, src: item?.backdrop_md }">
+              <template #baseCardTop>
+                <base-badge color="danger">
+                  {{ transformText(item?.original_language) }}
+                </base-badge>
+
+                <base-badge color="success">
+                  {{ item?.vote_average }}
+                </base-badge>
+              </template>
+
+              <base-heading type="h3">
+                {{ sliceText(item?.title, 20, false) }}
+              </base-heading>
+
+              <base-badge color="secondary">
+                {{ dictionary.release }}: {{ item?.release_date }}
               </base-badge>
 
-              <base-badge color="success">
-                {{ item.vote_average }}
-              </base-badge>
-            </template>
+              <base-paragraph size="sm">
+                {{ sliceText(item?.overview, 120, true) }}
+              </base-paragraph>
 
-            <base-heading type="h3">
-              {{ sliceText(item.title, 20, false) }}
-            </base-heading>
+              <template #baseCardActions>
+                <base-button
+                  color="primary"
+                  @click="
+                    $router.push({ name: 'tv-show', params: { id: item?.id } })
+                  "
+                >
+                  {{ dictionary.details }}
+                </base-button>
+              </template>
+            </base-card>
+          </template>
 
-            <base-badge color="secondary">
-              {{ dictionary.release }}: {{ item.release_date }}
-            </base-badge>
+          <template #baseCarouselPrev>
+            <base-button color="secondary">
+              <base-icon name="arrow-left" />
+            </base-button>
+          </template>
 
-            <base-paragraph size="sm">
-              {{ sliceText(item.overview, 120, true) }}
-            </base-paragraph>
-
-            <template #baseCardActions>
-              <base-button
-                color="primary"
-                @click="
-                  $router.push({ name: 'tv-show', params: { id: item.id } })
-                "
-              >
-                {{ dictionary.details }}
-              </base-button>
-            </template>
-          </base-card>
-        </template>
-
-        <template #baseCarouselPrev>
-          <base-button color="secondary">
-            <base-icon name="arrow-left" />
-          </base-button>
-        </template>
-
-        <template #baseCarouselNext>
-          <base-button color="secondary">
-            <base-icon name="arrow-right" />
-          </base-button>
-        </template>
-      </base-carousel>
+          <template #baseCarouselNext>
+            <base-button color="secondary">
+              <base-icon name="arrow-right" />
+            </base-button>
+          </template>
+        </base-carousel>
+      </base-wrapper>
     </base-section>
 
     <base-poster
       v-bind="{
-        alt: bottomMoviePoster.title,
-        src: bottomMoviePoster.backdrop_lg,
+        alt: bottomMoviePoster?.title,
+        src: bottomMoviePoster?.backdrop_lg,
       }"
       position="right"
     >
-      <base-heading type="h1">{{ bottomMoviePoster.title }}</base-heading>
-      <base-paragraph>{{ bottomMoviePoster.overview }}</base-paragraph>
+      <base-heading type="h1">{{ bottomMoviePoster?.title }}</base-heading>
+      <base-paragraph>{{ bottomMoviePoster?.overview }}</base-paragraph>
 
       <base-button
         color="danger"
         @click="
-          $router.push({ name: 'movie', params: { id: bottomMoviePoster.id } })
+          $router.push({ name: 'movie', params: { id: bottomMoviePoster?.id } })
         "
       >
         {{ dictionary.details }}

@@ -4,58 +4,59 @@
       <base-wrapper>
         <base-caption class="tv-shows-page__caption">
           <template #baseCaptionHeadingH1>
-            {{ dictionary.popularTvShows }} ({{ tvShowsList.length }})
+            {{ dictionary.popularTvShows }} ({{ tvShowsList?.length }})
           </template>
         </base-caption>
 
-        <div class="tv-shows-page__container">
-          <layout-grid-cards>
-            <base-card
-              v-for="item in paginatedList"
-              :key="item.id"
-              v-bind="{ alt: item.title, src: item.backdrop_md }"
-            >
-              <template #baseCardTop>
-                <base-badge color="danger">
-                  {{ transformText(item.original_language) }}
-                </base-badge>
-
-                <base-badge color="success">
-                  {{ item.vote_average }}
-                </base-badge>
-              </template>
-
-              <base-heading type="h3">
-                {{ sliceText(item.title, 20, false) }}
-              </base-heading>
-
-              <base-badge color="secondary">
-                {{ dictionary.release }}: {{ item.release_date }}
+        <layout-grid-cards>
+          <base-card
+            v-for="(item, index) in paginatedList"
+            :key="index"
+            v-bind="{ alt: item?.title, src: item?.backdrop_md }"
+          >
+            <template #baseCardTop>
+              <base-badge color="danger">
+                {{ transformText(item?.original_language) }}
               </base-badge>
 
-              <base-paragraph size="sm">
-                {{ sliceText(item.overview, 150, true) }}
-              </base-paragraph>
+              <base-badge color="success">
+                {{ item?.vote_average }}
+              </base-badge>
+            </template>
 
-              <template #baseCardActions>
-                <base-button
-                  color="primary"
-                  @click="
-                    $router.push({ name: item.route, params: { id: item.id } })
-                  "
-                >
-                  {{ dictionary.details }}
-                </base-button>
-              </template>
-            </base-card>
-          </layout-grid-cards>
+            <base-heading type="h3">
+              {{ sliceText(item?.title, 20, false) }}
+            </base-heading>
 
-          <base-pagination
-            v-bind="{ items: tvShowsList, visibleItems: 12 }"
-            class="tv-shows-page__pagination"
-            @change="(list: Array<TVShowItem>) => (paginatedList = list)"
-          />
-        </div>
+            <base-badge color="secondary">
+              {{ dictionary.release }}: {{ item?.release_date }}
+            </base-badge>
+
+            <base-paragraph size="sm">
+              {{ sliceText(item?.overview, 150, true) }}
+            </base-paragraph>
+
+            <template #baseCardActions>
+              <base-button
+                color="primary"
+                @click="
+                  $router.push({
+                    name: 'tv-show',
+                    params: { id: item?.id },
+                  })
+                "
+              >
+                {{ dictionary.details }}
+              </base-button>
+            </template>
+          </base-card>
+        </layout-grid-cards>
+
+        <base-pagination
+          v-bind="{ currentPage, totalPages }"
+          class="tv-shows-page__pagination"
+          @change="(page: number) => (currentPage = page)"
+        />
       </base-wrapper>
     </base-section>
   </article>
@@ -64,17 +65,30 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useStore } from '../store';
-import { TVShowItem } from '../interfaces';
 import { transformText, sliceText } from '../helpers';
+import { TVShowItem } from '../interfaces';
 import { dictionary } from '../config';
 
 import LayoutGridCards from '../layout/LayoutGridCards.vue';
 
 const store = useStore();
 
+const currentPage = ref(0);
+const visibleItems = 12;
+
 const tvShowsList = computed(() => store.getTVShowsList);
 
-const paginatedList = ref<Array<TVShowItem>>();
+const totalPages = computed(() =>
+  Math.ceil(tvShowsList.value.length / visibleItems)
+);
+
+const paginatedList = computed(() =>
+  tvShowsList.value.filter(
+    (item: TVShowItem, i: number) =>
+      i >= currentPage.value * visibleItems &&
+      i < currentPage.value * visibleItems + visibleItems
+  )
+);
 </script>
 
 <style lang="scss">
@@ -84,7 +98,7 @@ const paginatedList = ref<Array<TVShowItem>>();
   }
 
   &__pagination {
-    margin-top: 1.875em;
+    margin-top: 0.8125em;
   }
 }
 </style>

@@ -14,7 +14,6 @@ declare module '@vue/runtime-core' {
     BaseCard: typeof import('./src/components/BaseCard.vue')['default']
     BaseCarousel: typeof import('./src/components/BaseCarousel.vue')['default']
     BaseCheckbox: typeof import('./src/components/BaseCheckbox.vue')['default']
-    BaseCircularLoader: typeof import('./src/components/BaseCircularLoader.vue')['default']
     BaseDialog: typeof import('./src/components/BaseDialog.vue')['default']
     BaseDivider: typeof import('./src/components/BaseDivider.vue')['default']
     BaseFilter: typeof import('./src/components/BaseFilter.vue')['default']

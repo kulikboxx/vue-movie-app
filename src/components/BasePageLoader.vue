@@ -1,6 +1,6 @@
 <template>
   <transition name="base-page-loader">
-    <div v-if="visible" class="base-page-loader">
+    <div v-if="store.initialFetching" class="base-page-loader">
       <div class="base-page-loader__first">
         <div class="base-page-loader__second">
           <div class="base-page-loader__third"></div>
@@ -11,11 +11,9 @@
 </template>
 
 <script lang="ts" setup>
-interface Props {
-  visible?: boolean;
-}
+import { useStore } from '../store';
 
-defineProps<Props>();
+const store = useStore();
 </script>
 
 <style lang="scss">

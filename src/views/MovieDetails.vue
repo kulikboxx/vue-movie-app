@@ -66,7 +66,12 @@
               v-if="pageNumber > 0"
               color="secondary"
               @click="
-                store.changePage(moviesList, 'movie', +route.params.id, -1)
+                $router.push({
+                  name: 'movie',
+                  params: {
+                    id: store.changePage(moviesList, +route.params.id, -1),
+                  },
+                })
               "
             >
               <base-icon
@@ -82,7 +87,12 @@
               v-if="pageNumber < moviesList.length - 1"
               color="secondary"
               @click="
-                store.changePage(moviesList, 'movie', +route.params.id, 1)
+                $router.push({
+                  name: 'movie',
+                  params: {
+                    id: store.changePage(moviesList, +route.params.id, 1),
+                  },
+                })
               "
             >
               <base-icon
