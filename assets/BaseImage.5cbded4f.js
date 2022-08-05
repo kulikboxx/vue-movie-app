@@ -1,0 +1,1 @@
+import{_,o as s,c as a,r as t,d as c,m as r}from"./index.5cbdb7fd.js";const o={},l={class:"base-section"};function u(e,n){return s(),a("section",l,[t(e.$slots,"default")])}var p=_(o,[["render",u]]);const d=c({__name:"BaseImage",props:{alt:null,src:null},setup(e){return(n,i)=>(s(),a("img",r({alt:e.alt,src:e.src},{class:"base-image"}),null,16))}});export{p as _,d as a};
