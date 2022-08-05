@@ -4,6 +4,7 @@ import Components from 'unplugin-vue-components/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/vue-movie-app/',
   css: {
     preprocessorOptions: {
       scss: {
